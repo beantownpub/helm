@@ -50,7 +50,7 @@ install:
 		--debug
 
 template:
-	helm template . \
+	helm template beantown/contact-api \
 		--name-template=$(name) \
 		--namespace $(namespace) \
 		--set global.env=$(env) \
