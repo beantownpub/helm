@@ -17,3 +17,18 @@ db:
   port: 5432
 
 logLevel: INFO
+
+aws_access_key_id:
+aws_default_region:
+aws_secret_access_key:
+email_recipient:
+second_email_recipient:
+slack_channel:
+slack_orders_channel:
+slack_orders_webhook_url:
+slack_partys_channel:
+slack_partys_webhook_url:
+slack_user:
+slack_webhook_url:
+support_email_address:
+support_phone_number:

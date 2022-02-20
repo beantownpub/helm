@@ -87,6 +87,11 @@ contact/secret: context
 	@echo "\033[1;32m. . . Installing contact-api $(env) secret . . .\033[1;37m\n"
 	cd contact_api && make secret env=$(env)
 
+## Helm template Contact API secret
+contact/template: context
+	@echo "\033[1;32m. . . Helm templating contact-api $(env) . . .\033[1;37m\n"
+	cd contact_api && make template env=$(env)
+
 ## Create database secret
 db/secret: context
 	@echo "\033[1;32m. . . Installing DB $(env) secret . . .\033[1;37m\n"
