@@ -92,6 +92,13 @@ contact/template: context
 	@echo "\033[1;32m. . . Helm templating contact-api $(env) . . .\033[1;37m\n"
 	cd contact_api && make template env=$(env)
 
+## Publish contact Helm chart
+contact/publish:
+	cd contact_api && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add contact_api/
+
 ## Create database secret
 db/secret: context
 	@echo "\033[1;32m. . . Installing DB $(env) secret . . .\033[1;37m\n"
