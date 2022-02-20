@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    app: istio-ingress
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "beantownpub.com"
+    - "*.beantownpub.com"
+    - "*.prod.beantownpub.com"
+    - "thehubpub.com"
+    - "*.prod.thehubpub.com"
+    - "www.thehubpub.com"
+    - "drdavisicecream.com"
+    - "www.drdavisicecream.com"
+    - "wavelengths-brookline.com"
+    - "www.wavelengths-brookline.com"
+    - "*.jalgraves.com"

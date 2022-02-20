@@ -1,0 +1,4 @@
+image:
+  name: jalgraves/dyn_updater
+  tag: latest
+  pullPolicy: Always

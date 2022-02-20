@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "postgres.fullname" . }}
+spec:
+  serviceName: {{ include "postgres.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      serviceAccountName: {{ include "postgres.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: db_admin_pass
+                name: db-creds
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                key: db_admin_user
+                name: db-creds
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                key: db_pass
+                name: db-creds
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                key: db_user
+                name: db-creds
+          - name: CONTACT_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                key: contact_db_name
+                name: db-creds
+          - name: MENU_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                key: menu_db_name
+                name: db-creds
+          - name: MERCH_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                key: merch_db_name
+                name: db-creds
+          - name: USERS_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                key: users_db_name
+                name: db-creds
+          name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5432
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - name: db-bootstrap
+            mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+      - name: db-bootstrap
+        configMap:
+          name: db-bootstrap
+          items:
+          - key: pg_user.sh
+            path: init-user-db.sh

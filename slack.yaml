@@ -1,0 +1,37 @@
+display_information:
+  name: beanbot
+  long_description: Bot for communicating with Beantown's APIs and running tasks in beantownpub workspace. Beanbot will post online orders when they and come in as well party/event requests from any bar
+  description: Beantown's bot
+  background_color: "#fcba03"
+settings:
+  socket_mode_enabled: false
+  is_hosted: false
+  token_rotation_enabled: false
+  interactivity:
+    is_enabled: true
+    request_url: https://slack.aws.jalgraves.com/message_action
+oauth_config:
+  scopes:
+    bot:
+      - commands
+      - chat:write
+      - chat:write.public
+      - incoming-webhook
+      - reactions:write
+      - reactions:read
+      - reminders:read
+      - reminders:write
+      - users:read
+      - users:write
+features:
+  app_home:
+    home_tab_enabled: true
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+  bot_user:
+    display_name: beanbot
+  slash_commands:
+    - command: /beanbot
+      description: A task beanbot will perform
+      usage_hint: /beanbot open mailbox
+      url: https://slack.aws.jalgraves.com/slash/foo

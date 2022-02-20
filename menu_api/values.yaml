@@ -1,0 +1,19 @@
+appName: menu-api
+
+image:
+  repository: jalgraves/menu_api
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+containerPort: 5004
+ingress:
+  enabled: false
+ingressHost: ""
+
+db:
+  dbName: food
+  host: postgres.database.svc.cluster.local
+  port: 5432
+
+logLevel: INFO

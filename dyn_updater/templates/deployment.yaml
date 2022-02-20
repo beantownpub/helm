@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dyn-updater
+  name: {{ .Release.Name }}
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  selector:
+    matchLabels:
+      app: dyn-updater
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: dyn-updater
+    spec:
+      containers:
+      - env:
+        - name: DYN_CUSTOMER_NAME
+          value: {{ .Values.dynCustomerName }}
+        - name: DYN_API_USERNAME
+          value: {{ .Values.dynApiUsername }}
+        - name: DYN_API_PASSWORD
+          value: {{ .Values.dynApiPassword }}
+        - name: DYN_UPDATE_ZONE
+          value: {{ .Values.dynUpdateZone }}
+        - name: DYN_UPDATE_HOST
+          value: {{ .Values.dynUpdateHost }}
+        - name: AWS_ALB_HOST
+          value: {{ .Values.awsAlbHost }}
+        image: {{ .Values.image.name }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: dyn-updater
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

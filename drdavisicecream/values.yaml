@@ -1,0 +1,10 @@
+image:
+  repository: jalgraves/drdavisicecream
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+containerPort: 3034
+
+ingress:
+  enabled: false

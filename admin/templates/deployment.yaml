@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "admin.fullname" . }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ include "admin.fullname" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ include "admin.fullname" . }}
+    spec:
+      containers:
+      - env:
+        - name: API_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: api_user
+              name: app-creds
+        - name: API_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: api_pass
+              name: app-creds
+        - name: LOG_LEVEL
+          value: {{ .Values.logLevel }}
+        - name: CONTACT_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_host
+              name: services
+        - name: CONTACT_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_protocol
+              name: services
+        - name: MENU_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: menu_api_host
+              name: services
+        - name: MENU_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: menu_api_protocol
+              name: services
+        - name: MERCH_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: merch_api_host
+              name: services
+        - name: MERCH_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: merch_api_protocol
+              name: services
+        - name: USERS_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: users_api_host
+              name: services
+        - name: USERS_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: users_api_protocol
+              name: services
+      {{- if eq .Values.global.env "dev" }}
+        image: "beantown_admin:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Never
+      {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Always
+      {{- end }}
+        name: {{ include "admin.fullname" . }}
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+          name: {{ .Values.portName }}
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /app/package.json
+          initialDelaySeconds: 5
+          periodSeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.portName }}
+          initialDelaySeconds: 10
+          failureThreshold: 2
+          periodSeconds: 60
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        resources: {}

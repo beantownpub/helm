@@ -1,0 +1,14 @@
+image:
+  name: thehubpub
+  repository: jalgraves/thehubpub
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+containerPort: 3037
+portName: tcp-thehubpub
+
+ingress:
+  enabled: false
+
+ingressHost: ""

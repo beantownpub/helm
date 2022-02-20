@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "drdavisicecream.fullname" . }}
+  labels:
+    jke/workload: {{ include "drdavisicecream.fullname" . }}
+
+spec:
+  progressDeadlineSeconds: 300
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ include "drdavisicecream.fullname" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ include "drdavisicecream.fullname" . }}
+    spec:
+      containers:
+      - env:
+        - name: CONTACT_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_host
+              name: services
+        - name: CONTACT_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_protocol
+              name: services
+        - name: API_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: api_user
+              name: app-creds
+        - name: API_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: api_pass
+              name: app-creds
+      {{- if eq .Values.global.env "dev" }}
+        image: "drdavisicecream:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Never
+      {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Always
+      {{- end }}
+        name: drdavisicecream
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+          name: tcp-docs
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30

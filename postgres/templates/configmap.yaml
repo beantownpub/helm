@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  pg_user.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "User: ${DB_USER}"
+
+    psql -v -U ${POSTGRES_USER} -d ${POSTGRES_USER} <<-EOSQL
+        CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASS}';
+        CREATE DATABASE ${DB_USER};
+        GRANT ALL PRIVILEGES ON DATABASE ${DB_USER} TO ${DB_USER};
+        CREATE DATABASE ${MENU_DB_NAME} OWNER ${DB_USER};
+        CREATE DATABASE ${CONTACT_DB_NAME} OWNER ${DB_USER};
+        CREATE DATABASE ${USERS_DB_NAME} OWNER ${DB_USER};
+        CREATE DATABASE ${MERCH_DB_NAME} OWNER ${DB_USER};
+        CREATE DATABASE sessions OWNER ${DB_USER};
+    EOSQL
+kind: ConfigMap
+metadata:
+  name: db-bootstrap

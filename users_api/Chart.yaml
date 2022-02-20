@@ -1,0 +1,8 @@
+apiVersion: v2
+name: users-api
+description: Users API deployment
+type: application
+version: 0.1.0
+appVersion: 0.1.4
+sources:
+- https://github.com/beantownpub/users_api

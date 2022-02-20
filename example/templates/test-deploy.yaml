@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-test
+  namespace: prod
+spec:
+  progressDeadlineSeconds: 300
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: echo
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+      - image: hashicorp/http-echo
+        imagePullPolicy: Always
+        name: echo-test
+        args: ["-text=HELLO"]
+        ports:
+        - containerPort: 5678
+          name: tcp-users-api
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 3
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: echo-test
+spec:
+  host: echo-test.prod.svc.cluster.local
+  subsets:
+  - name: echo-test
+    labels:
+      istio: echo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-test
+spec:
+  ports:
+  - name: "tcp-users-api"
+    port: 5678
+    targetPort: 5678
+  selector:
+    app: echo

@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "beantown.fullname" . }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ include "beantown.fullname" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ include "beantown.fullname" . }}
+    spec:
+      containers:
+      - env:
+        - name: API_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: api_user
+              name: app-creds
+        - name: API_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: api_pass
+              name: app-creds
+        - name: LOG_LEVEL
+          value: {{ .Values.logLevel }}
+        - name: CONTACT_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_host
+              name: services
+        - name: CONTACT_API_PORT
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_port
+              name: services
+        - name: CONTACT_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_protocol
+              name: services
+        - name: MENU_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: menu_api_host
+              name: services
+        - name: MENU_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: menu_api_protocol
+              name: services
+        - name: MENU_API_PORT
+          valueFrom:
+            secretKeyRef:
+              key: menu_api_port
+              name: services
+        - name: MERCH_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: merch_api_host
+              name: services
+        - name: MERCH_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: merch_api_protocol
+              name: services
+        - name: MERCH_API_PORT
+          valueFrom:
+            secretKeyRef:
+              key: merch_api_port
+              name: services
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: session_secret
+              name: beantown-creds
+        - name: SQUARE_ACCESS_TOKEN_DEV
+          valueFrom:
+            secretKeyRef:
+              key: square_access_token_dev
+              name: beantown-creds
+        - name: SQUARE_ACCESS_TOKEN_PROD
+          valueFrom:
+            secretKeyRef:
+              key: square_access_token_prod
+              name: beantown-creds
+        - name: SQUARE_APPLICATION_ID_SANDBOX
+          valueFrom:
+            secretKeyRef:
+              key: square_application_id_sandbox
+              name: beantown-creds
+        - name: SQUARE_URL
+          valueFrom:
+            secretKeyRef:
+              key: square_url
+              name: beantown-creds
+        - name: USERS_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: users_api_host
+              name: services
+        - name: USERS_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: users_api_protocol
+              name: services
+      {{- if eq .Values.global.env "dev" }}
+        image: "beantown:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Never
+      {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Always
+      {{- end }}
+        name: {{ include "beantown.fullname" . }}
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+          name: tcp-beantown
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        resources: {}
+      - image: redis
+        imagePullPolicy: IfNotPresent
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: tcp-redis
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false

@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "merch-api.fullname" . }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ include "merch-api.fullname" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ include "merch-api.fullname" . }}
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              key: db_host
+              name: app-creds
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              key: db_port
+              name: app-creds
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              key: db_name
+              name: merch-api-creds
+        - name: API_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: api_user
+              name: app-creds
+        - name: API_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: api_pass
+              name: app-creds
+        - name: CONTACT_API_HOST
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_host
+              name: services
+        - name: CONTACT_API_PORT
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_port
+              name: services
+        - name: CONTACT_API_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              key: contact_api_protocol
+              name: services
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: db_user
+              name: app-creds
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: db_pass
+              name: app-creds
+        - name: FLASK_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: flask_secret_key
+              name: merch-api-creds
+        - name: FRONTEND_ORIGIN_URL
+          valueFrom:
+            secretKeyRef:
+              key: frontend_origin_url
+              name: merch-api-creds
+        - name: LOG_LEVEL
+          value: {{ .Values.logLevel }}
+      {{- if eq .Values.global.env "dev" }}
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Never
+      {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Always
+      {{- end }}
+        name: {{ include "merch-api.fullname" . }}
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+          name: tcp-merch-api
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        resources: {}
+      - image: redis
+        imagePullPolicy: IfNotPresent
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: tcp-redis
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false

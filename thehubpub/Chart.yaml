@@ -1,0 +1,8 @@
+apiVersion: v2
+name: hubpub
+description: The Hub Pub site deployment
+type: application
+version: 0.1.1
+appVersion: 0.1.2
+sources:
+- https://github.com/beantownpub/thehubpub

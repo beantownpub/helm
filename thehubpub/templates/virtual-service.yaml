@@ -1,0 +1,24 @@
+{{- if eq .Values.global.env "prod" }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "thehubpub.fullname" . }}
+spec:
+  hosts:
+  - "{{ include "thehubpub.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+  - "{{ include "thehubpub.fullname" . }}.{{ .Release.Namespace }}.pubpub.com"
+  - "demo.{{ .Release.Namespace }}.thehubpub.com"
+  - "thehubpub.com"
+  - "www.thehubpub.com"
+
+  gateways:
+  - istio-ingress/web-gateway
+  - mesh # applies to all the sidecars in the mesh
+  http:
+  - route:
+    - destination:
+        port:
+          number: {{ .Values.containerPort }}
+        host: "{{ include "thehubpub.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+        subset: {{ include "thehubpub.fullname" . }}
+{{- end }}

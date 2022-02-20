@@ -1,0 +1,13 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: automation-role-binding
+  namespace: prod
+subjects:
+- kind: User
+  name: jalbot
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: automation-rw-role
+  apiGroup: rbac.authorization.k8s.io

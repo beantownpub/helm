@@ -1,0 +1,19 @@
+appName: merch-api
+
+image:
+  repository: jalgraves/merch_api
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+containerPort: 5000
+ingressHost: merch-api.jalgraves.com
+
+db:
+  name: merch
+  host: postgres.default.svc.cluster.local
+  port: 5432
+
+logLevel: INFO
+ingress:
+  enabled: false

@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "menu-api.fullname" . }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ include "menu-api.fullname" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ include "menu-api.fullname" . }}
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              key: db_host
+              name: app-creds
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              key: db_port
+              name: app-creds
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              key: db_name
+              name: menu-api-creds
+        - name: API_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: api_user
+              name: app-creds
+        - name: API_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: api_pass
+              name: app-creds
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: db_user
+              name: app-creds
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: db_pass
+              name: app-creds
+        - name: LOG_LEVEL
+          value: {{ .Values.logLevel }}
+      {{- if eq .Values.global.env "dev" }}
+        image: "menu_api:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Never
+      {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: Always
+      {{- end }}
+        name: {{ include "menu-api.fullname" . }}
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+          name: tcp-menu-api
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /opt/app/swagger.yaml
+          initialDelaySeconds: 5
+          periodSeconds: 60
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        resources: {}

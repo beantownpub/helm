@@ -1,0 +1,13 @@
+image:
+  repository: jalgraves/beantown_admin
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+containerPort: 3033
+portName: tcp-admin
+
+ingress:
+  enabled: false
+
+logLevel: debug

@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "wavelengths.fullname" . }}
+spec:
+  hosts:
+  - "{{ include "wavelengths.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+  - "{{ include "wavelengths.fullname" . }}.{{ .Release.Namespace }}.wavelengths-brookline.com"
+  - "demo.{{ .Release.Namespace }}.wavelengths-brookline.com"
+  - "wavelengths-brookline.com"
+  - "www.wavelengths-brookline.com"
+
+  gateways:
+  - istio-ingress/web-gateway
+  - mesh # applies to all the sidecars in the mesh
+  http:
+  - route:
+    - destination:
+        port:
+          number: {{ .Values.containerPort }}
+        host: "{{ include "wavelengths.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+        subset: {{ include "wavelengths.fullname" . }}

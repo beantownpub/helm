@@ -1,0 +1,20 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "beantown.fullname" . }}
+spec:
+  rules:
+  - host: {{ .Values.ingressHost }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ include "beantown.fullname" . }}
+          servicePort: {{ .Values.containerPort }}
+  - host: "www.{{ .Values.ingressHost }}"
+    http:
+      paths:
+      - backend:
+          serviceName: {{ include "beantown.fullname" . }}
+          servicePort: {{ .Values.containerPort }}
+{{- end }}
