@@ -36,6 +36,12 @@ spec:
               key: second_email_recipient
               name: contact-api-creds
               optional: false
+        - name: TEST_EMAIL_RECIPIENT
+          valueFrom:
+            secretKeyRef:
+              key: test_email_recipient
+              name: contact-api-creds
+              optional: false
         - name: SLACK_WEBHOOK_USER
           valueFrom:
             secretKeyRef:

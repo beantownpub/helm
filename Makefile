@@ -104,6 +104,13 @@ db/secret: context
 	@echo "\033[1;32m. . . Installing DB $(env) secret . . .\033[1;37m\n"
 	cd postgres && make db/secret env=$(env)
 
+## Publish db Helm chart
+db/publish:
+	cd postgres && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add postgres/
+
 ## Create Menu API secret
 menu/secret: context
 	@echo "\033[1;32m. . . Installing menu-api $(env) secret . . .\033[1;37m\n"
@@ -119,7 +126,7 @@ users/secret: context
 	@echo "\033[1;32m. . . Installing users-api $(env) secret . . .\033[1;37m\n"
 	cd users_api && make secret env=$(env)
 
-secrets: app/creds/secret app/services/secret contact/secret db/secret menu/secret merch/secret users/secret app/square/secret beantown/secret
+secrets: app/creds/secret app/services/secret db/secret menu/secret merch/secret users/secret app/square/secret beantown/secret
 
 deploy: context namespaces secrets db/install
 

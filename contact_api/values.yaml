@@ -32,3 +32,4 @@ slack_user:
 slack_webhook_url:
 support_email_address:
 support_phone_number:
+test_email_recipient:

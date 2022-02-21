@@ -47,6 +47,7 @@ install:
 		--set slack_orders_channel="${SLACK_ORDERS_CHANNEL}" \
 		--set slack_orders_webhook_url=$(slack_orders_webhook_url) \
 		--set slack_partys_webhook_url=$(slack_partys_webhook_url) \
+		--set test_email_recipient="${TEST_EMAIL_RECIPIENT}" \
 		--debug
 
 template:
