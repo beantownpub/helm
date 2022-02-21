@@ -1,9 +1,22 @@
 apiVersion: v1
 entries:
+  beantown:
+  - apiVersion: v2
+    appVersion: 0.1.23
+    created: "2022-02-21T14:59:36.696416-05:00"
+    description: Beantown Pub frontend deployment
+    digest: 23860649f7cfc9aebc328438e0128d2146dc7ee0c8ea45b1a8c23143be4a4524
+    name: beantown
+    sources:
+    - https://github.com/beantownpub/frontend
+    type: application
+    urls:
+    - https://beantownpub.github.io/helm/beantown/beantown-0.1.0.tgz
+    version: 0.1.0
   contact-api:
   - apiVersion: v2
     appVersion: 0.1.12
-    created: "2022-02-20T20:24:16.822782-05:00"
+    created: "2022-02-21T14:59:36.702426-05:00"
     description: Contact API deployment
     digest: f81d4e175b5bc22ca98b680560a190c16510a2366875542158166f00ee0a5281
     name: contact-api
@@ -15,7 +28,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.1.11
-    created: "2022-02-20T20:24:16.820883-05:00"
+    created: "2022-02-21T14:59:36.700192-05:00"
     description: Contact API deployment
     digest: b200e47ae967418cb22978196d6aaac27a2964f74506e0af565f54240e6bf743
     name: contact-api
@@ -27,7 +40,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.10
-    created: "2022-02-20T20:24:16.818652-05:00"
+    created: "2022-02-21T14:59:36.698252-05:00"
     description: Contact API deployment
     digest: a4a4a53e17febcc05f65a441c05f46b93542947972288f6828a71ed9b33d413a
     name: contact-api
@@ -40,7 +53,7 @@ entries:
   merch-api:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2022-02-20T20:24:16.823551-05:00"
+    created: "2022-02-21T14:59:36.703191-05:00"
     description: Beantown Merchandise API deployment
     digest: 9924b4f1b44f45557bd82becea929ade4cee6865945cf80a2a2522ec941b6d4f
     name: merch-api
@@ -50,4 +63,4 @@ entries:
     urls:
     - https://beantownpub.github.io/helm/merch_api/merch-api-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-20T20:24:16.817659-05:00"
+generated: "2022-02-21T14:59:36.695893-05:00"

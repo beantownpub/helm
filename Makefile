@@ -198,11 +198,6 @@ contact/install: context
 	@echo "\033[1;32m. . . Installing contact-api in $(env) . . .\033[1;37m\n"
 	cd contact_api && make install env=$(env) context=$(context)
 
-## Recreate Contact API secret
-contact/secret/recreate: context
-	@echo "\033[1;32m. . . Installing contact-api in $(env) . . .\033[1;37m\n"
-	cd contact_api && make secret/recreate env=$(env) context=$(context)
-
 ## Forward contact-api port locally
 contact/port_forward: context
 	kubectl port-forward --namespace $(namespace) svc/contact-api 5012:5012
@@ -246,6 +241,13 @@ admin/delete: context
 ## Forward Beantown admin port locally
 admin/port_forward: context
 	kubectl port-forward --namespace $(namespace) svc/beantown-admin 3033:3033
+
+## Publish bentown Helm chart
+beantown/publish:
+	cd beantown && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add beantown/
 
 ## Create Beantown secret
 beantown/secret: context
