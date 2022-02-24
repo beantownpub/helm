@@ -12,3 +12,9 @@ ingress:
 logLevel: DEBUG
 
 nodeEnv: ""
+
+session_secret:
+square_access_token_dev:
+square_access_token_prod:
+square_application_id_sandbox:
+square_url:

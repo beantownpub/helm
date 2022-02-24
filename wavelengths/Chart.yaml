@@ -3,6 +3,6 @@ name: wavelengths
 description: Wavelengths hair salon site deployment
 type: application
 version: 0.1.0
-appVersion: 0.1.0
+appVersion: 0.1.1
 sources:
 - https://github.com/beantownpub/wavelengths

@@ -20,7 +20,10 @@ install:
 	kubectl config use-context $(context)
 	helm upgrade --install beantown . \
 		--namespace $(namespace) \
+		--set image.tag=0.1.24 \
 		--set global.env=$(env) \
+		--set session_secret=$() \
+		--set square_url=$() \
 		--debug
 
 delete:

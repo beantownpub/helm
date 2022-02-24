@@ -111,11 +111,6 @@ db/publish:
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add postgres/
 
-## Create Menu API secret
-menu/secret: context
-	@echo "\033[1;32m. . . Installing menu-api $(env) secret . . .\033[1;37m\n"
-	cd menu_api && make secret env=$(env)
-
 ## Create Merch API secret
 merch/secret: context
 	@echo "\033[1;32m. . . Installing merch-api $(env) secret . . .\033[1;37m\n"
@@ -126,7 +121,7 @@ users/secret: context
 	@echo "\033[1;32m. . . Installing users-api $(env) secret . . .\033[1;37m\n"
 	cd users_api && make secret env=$(env)
 
-secrets: app/creds/secret app/services/secret db/secret menu/secret merch/secret users/secret app/square/secret beantown/secret
+secrets: app/creds/secret app/services/secret db/secret merch/secret users/secret app/square/secret beantown/secret
 
 deploy: context namespaces secrets db/install
 
@@ -274,6 +269,16 @@ thehubpub/port_forward: context
 wavelengths/install: context
 	cd wavelengths && make install env=$(env) context=$(context)
 
+## Forward The Hub Pub port locally k8s_port:local_port
+wavelengths/port_forward: context
+	kubectl port-forward --namespace $(namespace) svc/wavelengths 3077:3077
+
+## Publish wavelengths Helm chart
+wavelengths/publish:
+	cd wavelengths && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add wavelengths/
 ## Install DrDavisIceCream frontend
 drdavisicecream/install: context
 	cd drdavisicecream && make install env=$(env) context=$(context)

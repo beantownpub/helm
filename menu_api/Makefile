@@ -30,6 +30,7 @@ install:
 		--namespace $(namespace) \
 		--set global.env=$(env) \
 		--set image.name=$(image) \
+		--set db_name=${MENU_DB_NAME} \
 		--set image.tag=$(tag) \
 		--set logLevel=$(log_level) \
 		--debug
@@ -58,8 +59,3 @@ describe:
 
 kill_pod:
 		../scripts/kill_pod.sh $(namespace) $(name)
-
-secret:
-	kubectl create secret generic menu-api-creds \
-		--namespace $(namespace) \
-		--from-literal=db_name="${MENU_DB_NAME}"

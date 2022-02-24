@@ -11,9 +11,6 @@ ingress:
   enabled: false
 ingressHost: ""
 
-db:
-  dbName: food
-  host: postgres.database.svc.cluster.local
-  port: 5432
+db_name:
 
 logLevel: INFO
