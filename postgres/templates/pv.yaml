@@ -3,8 +3,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv
-labels:
-  type: local
+  labels:
+    type: aws
 spec:
   storageClassName: aws
   capacity:
