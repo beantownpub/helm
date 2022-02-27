@@ -10,6 +10,7 @@ ifeq ($(env),dev)
 	context = ${DEV_CONTEXT}
 	namespace = ${DEV_NAMESPACE}
 	square_url = ${SQUARE_URL_DEV}
+	image_tag = ""
 else
 	context = ${PROD_CONTEXT}
 	namespace = ${PROD_NAMESPACE}
@@ -20,7 +21,7 @@ install:
 	kubectl config use-context $(context)
 	helm upgrade --install beantown . \
 		--namespace $(namespace) \
-		--set image.tag=0.1.24 \
+		--set image.tag=$(tag) \
 		--set global.env=$(env) \
 		--set session_secret=${SESSION_SECRET} \
 		--set square_access_token_dev=${SQUARE_ACCESS_TOKEN_DEV} \
