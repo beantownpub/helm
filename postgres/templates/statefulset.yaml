@@ -29,6 +29,8 @@ spec:
               secretKeyRef:
                 key: db_admin_user
                 name: db-creds
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
           - name: DB_PASS
             valueFrom:
               secretKeyRef:
