@@ -40,6 +40,7 @@ template:
 		--set menu_db_name=${MENU_DB_NAME} \
 		--set merch_db_name=${MERCH_DB_NAME} \
 		--set users_db_name=${USERS_DB_NAME} \
+		--set pvc.enabled=false \
 		--debug
 
 db/port_forward:

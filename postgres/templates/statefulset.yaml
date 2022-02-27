@@ -84,7 +84,7 @@ spec:
           items:
           - key: pg_user.sh
             path: init-user-db.sh
-      {{- if .Values.pvc.enabled -}}
+      {{- if .Values.pvc.enabled }}
       - name: postgres-pvc
         persistentVolumeClaim:
           claimName: postgres-pvc

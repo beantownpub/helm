@@ -3,7 +3,7 @@ entries:
   admin:
   - apiVersion: v2
     appVersion: 0.1.7-a0c21b0
-    created: "2022-02-27T16:36:20.420568-05:00"
+    created: "2022-02-27T16:44:38.432788-05:00"
     description: Admin frontend
     digest: 2c2ce6700536ddf76e8b24b11870f99789a4032c13b61779c3478649323aa7a2
     name: admin
@@ -16,7 +16,7 @@ entries:
   beantown:
   - apiVersion: v2
     appVersion: 0.1.23
-    created: "2022-02-27T16:36:20.421612-05:00"
+    created: "2022-02-27T16:44:38.434933-05:00"
     description: Beantown Pub frontend deployment
     digest: f023f2f06234d986709b413e598e6bf91648b16ab039f52a300d0e53fb08ee64
     name: beantown
@@ -28,7 +28,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.23
-    created: "2022-02-27T16:36:20.421025-05:00"
+    created: "2022-02-27T16:44:38.433772-05:00"
     description: Beantown Pub frontend deployment
     digest: 8b2d40c6bf85f4e78bd7f013bba6e26b172489ee243e92fbb67a159a4aa56b71
     name: beantown
@@ -41,7 +41,7 @@ entries:
   contact-api:
   - apiVersion: v2
     appVersion: 0.1.12
-    created: "2022-02-27T16:36:20.424579-05:00"
+    created: "2022-02-27T16:44:38.441147-05:00"
     description: Contact API deployment
     digest: f81d4e175b5bc22ca98b680560a190c16510a2366875542158166f00ee0a5281
     name: contact-api
@@ -53,7 +53,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.1.11
-    created: "2022-02-27T16:36:20.423355-05:00"
+    created: "2022-02-27T16:44:38.439077-05:00"
     description: Contact API deployment
     digest: b200e47ae967418cb22978196d6aaac27a2964f74506e0af565f54240e6bf743
     name: contact-api
@@ -65,7 +65,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.10
-    created: "2022-02-27T16:36:20.422471-05:00"
+    created: "2022-02-27T16:44:38.43654-05:00"
     description: Contact API deployment
     digest: a4a4a53e17febcc05f65a441c05f46b93542947972288f6828a71ed9b33d413a
     name: contact-api
@@ -78,7 +78,7 @@ entries:
   merch-api:
   - apiVersion: v2
     appVersion: 0.1.2
-    created: "2022-02-27T16:36:20.424974-05:00"
+    created: "2022-02-27T16:44:38.4419-05:00"
     description: Beantown Merchandise API deployment
     digest: 9924b4f1b44f45557bd82becea929ade4cee6865945cf80a2a2522ec941b6d4f
     name: merch-api
@@ -91,7 +91,17 @@ entries:
   postgres:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-02-27T16:36:20.425483-05:00"
+    created: "2022-02-27T16:44:38.445049-05:00"
+    description: A Helm chart for deploying Postgres to K8s
+    digest: 499683c0924a54b73f98598cc3101c1772559a0e93be5c2997051ae5c58cbe3b
+    name: postgres
+    type: application
+    urls:
+    - https://beantownpub.github.io/helm/postgres/postgres-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-02-27T16:44:38.4428-05:00"
     description: A Helm chart for deploying Postgres to K8s
     digest: d2cd2cc8a6d7c75fa25fe79a29ca80cd1663d8f8e795a62a66ca746504137db2
     name: postgres
@@ -102,7 +112,7 @@ entries:
   wavelengths:
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2022-02-27T16:36:20.425814-05:00"
+    created: "2022-02-27T16:44:38.445738-05:00"
     description: Wavelengths hair salon site deployment
     digest: 64a699e51159aca9413833fdd792be26d6e38914da53f8aee509fc74ba767b52
     name: wavelengths
@@ -112,4 +122,4 @@ entries:
     urls:
     - https://beantownpub.github.io/helm/wavelengths/wavelengths-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-27T16:36:20.419956-05:00"
+generated: "2022-02-27T16:44:38.431436-05:00"
