@@ -99,6 +99,13 @@ contact/publish:
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add contact_api/
 
+## Publish admin Helm chart
+admin/publish:
+	cd admin && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add admin/
+
 ## Create database secret
 db/secret: context
 	@echo "\033[1;32m. . . Installing DB $(env) secret . . .\033[1;37m\n"
@@ -196,6 +203,11 @@ contact/install: context
 ## Forward contact-api port locally
 contact/port_forward: context
 	kubectl port-forward --namespace $(namespace) svc/contact-api 5012:5012
+
+## Template db Helm chart
+db/template: context
+	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"
+	cd postgres && make template env=$(env) context=$(context)
 
 ## Install database
 db/install: context

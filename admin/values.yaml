@@ -1,3 +1,11 @@
+# +-+-+-+-+ +-+-+-+-+-+-+-+-+-+ +-+-+-+-+
+# |*|*|*|*| |J|A|L|G|R|A|V|E|S| |*|*|*|*|
+# +-+-+-+-+ +-+-+-+-+-+-+-+-+-+ +-+-+-+-+
+# 2022
+
+api_pass:
+api_user:
+
 image:
   repository: jalgraves/beantown_admin
   pullPolicy: Always

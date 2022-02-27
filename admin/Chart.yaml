@@ -3,6 +3,6 @@ name: admin
 description: Admin frontend
 type: application
 version: 0.1.0
-appVersion: 0.1.7
+appVersion: 0.1.7-a0c21b0
 sources:
 - https://github.com/beantownpub/admin

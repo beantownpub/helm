@@ -5,7 +5,7 @@ metadata:
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: {{ include "admin.fullname" . }}
@@ -25,12 +25,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: api_user
-              name: app-creds
+              name: admin-creds
         - name: API_PASSWORD
           valueFrom:
             secretKeyRef:
               key: api_pass
-              name: app-creds
+              name: admin-creds
         - name: LOG_LEVEL
           value: {{ .Values.logLevel }}
         - name: CONTACT_API_HOST
@@ -105,3 +105,7 @@ spec:
           readOnlyRootFilesystem: false
           runAsNonRoot: false
         resources: {}
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule

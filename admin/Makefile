@@ -15,29 +15,25 @@ else
 endif
 
 install:
-		kubectl config use-context $(context)
-		helm upgrade --install $(name) . \
-			--namespace $(namespace) \
-			--set global.env=$(env) \
-			--debug
+	kubectl config use-context $(context)
+	helm upgrade --install $(name) . \
+		--namespace $(namespace) \
+		--set global.env=$(env) \
+		--set api_user=${API_USER} \
+		--set api_pass=${API_PASS} \
+		--debug
 
 delete:
-		kubectl config use-context $(context)
-		helm uninstall $(name) -n $(namespace)
+	kubectl config use-context $(context)
+	helm uninstall $(name) -n $(namespace)
 
-install:
-		kubectl config use-context $(context)
-		helm upgrade --install $(name) . \
-			--namespace $(namespace) \
-			--set global.env=$(env) \
-			--debug
 
 template:
-		helm template . \
-			--namespace $(namespace) \
-			--name-template=$(name) \
-			--set global.env=$(env) \
-			--debug
+	helm template . \
+		--namespace $(namespace) \
+		--name-template=$(name) \
+		--set global.env=$(env) \
+		--debug
 
 .ONESHELL: port_forward
 SHELL := /bin/bash

@@ -22,8 +22,11 @@ install:
 		--namespace $(namespace) \
 		--set image.tag=0.1.24 \
 		--set global.env=$(env) \
-		--set session_secret=$() \
-		--set square_url=$() \
+		--set session_secret=${SESSION_SECRET} \
+		--set square_access_token_dev=${SQUARE_ACCESS_TOKEN_DEV} \
+		--set square_access_token_prod=${SQUARE_ACCESS_TOKEN_PROD} \
+		--set square_application_id_sandbox=${SQUARE_APPLICATION_ID_SANDBOX} \
+		--set square_url=$(square_url) \
 		--debug
 
 delete:

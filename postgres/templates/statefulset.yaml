@@ -73,6 +73,10 @@ spec:
           volumeMounts:
           - name: db-bootstrap
             mountPath: /docker-entrypoint-initdb.d/
+          {{- if .Values.pvc.enabled }}
+          - name: postgres-pvc
+            mountPath: /var/lib/postgresql/data
+          {{- end }}
       volumes:
       - name: db-bootstrap
         configMap:
@@ -80,3 +84,8 @@ spec:
           items:
           - key: pg_user.sh
             path: init-user-db.sh
+      {{- if .Values.pvc.enabled -}}
+      - name: postgres-pvc
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+      {{- end -}}
