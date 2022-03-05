@@ -228,6 +228,11 @@ menu/install: context
 menu/port_forward: context
 	kubectl port-forward --namespace $(namespace) svc/menu-api 5004:5004
 
+## Helm template Merch API
+merch/template: context
+	@echo "\033[1;32m. . . Helm templating merch-api $(env) . . .\033[1;37m\n"
+	cd merch_api && make template env=$(env)
+
 ## Install Merch API
 merch/install: context
 	@echo "\033[1;32m. . . Installing menu-api in $(env) . . .\033[1;37m\n"

@@ -3,6 +3,6 @@ name: merch-api
 description: Beantown Merchandise API deployment
 type: application
 version: 0.1.0
-appVersion: 0.1.2
+appVersion: 0.1.2-384bfb9
 sources:
 - https://github.com/beantownpub/merch-api

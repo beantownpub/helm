@@ -25,12 +25,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: db_host
-              name: app-creds
+              name: merch-api-creds
         - name: DB_PORT
           valueFrom:
             secretKeyRef:
               key: db_port
-              name: app-creds
+              name: merch-api-creds
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
@@ -40,12 +40,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: api_user
-              name: app-creds
+              name: merch-api-creds
         - name: API_PASSWORD
           valueFrom:
             secretKeyRef:
               key: api_pass
-              name: app-creds
+              name: merch-api-creds
         - name: CONTACT_API_HOST
           valueFrom:
             secretKeyRef:
@@ -65,16 +65,11 @@ spec:
           valueFrom:
             secretKeyRef:
               key: db_user
-              name: app-creds
+              name: merch-api-creds
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               key: db_pass
-              name: app-creds
-        - name: FLASK_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              key: flask_secret_key
               name: merch-api-creds
         - name: FRONTEND_ORIGIN_URL
           valueFrom:

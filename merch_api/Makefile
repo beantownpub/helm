@@ -29,6 +29,14 @@ install:
 		--set global.env=$(env) \
 		--set image.name=$(name) \
 		--set image.tag=$(tag) \
+		--set api_user=${API_USER} \
+		--set api_pass=${API_PASS} \
+		--set db_host=${DB_HOST} \
+		--set db_pass=${DB_PASS} \
+		--set db_port="5432" \
+		--set db_user=${DB_USER} \
+		--set db_name=${MERCH_DB_NAME} \
+		--set frontend_origin_url=${FRONTEND_ORIGIN_URL} \
 		--set logLevel=$(log_level) \
 		--debug
 
@@ -38,6 +46,14 @@ template:
 		--set global.env=$(env) \
 		--set image.name=$(image) \
 		--set image.tag=$(tag) \
+		--set api_user=${API_USER} \
+		--set api_pass=${API_PASS} \
+		--set db_host=${DB_HOST} \
+		--set db_pass=${DB_PASS} \
+		--set db_port="${DB_PORT}" \
+		--set db_user=${DB_USER} \
+		--set db_name=${MERCH_DB_NAME} \
+		--set frontend_origin_url=${FRONTEND_ORIGIN_URL} \
 		--debug
 
 

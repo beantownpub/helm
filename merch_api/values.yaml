@@ -17,3 +17,12 @@ db:
 logLevel: INFO
 ingress:
   enabled: false
+
+api_pass:
+api_user:
+db_host:
+db_pass:
+db_port:
+db_user:
+db_name:
+frontend_origin_url:

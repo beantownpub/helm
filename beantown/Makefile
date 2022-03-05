@@ -10,11 +10,12 @@ ifeq ($(env),dev)
 	context = ${DEV_CONTEXT}
 	namespace = ${DEV_NAMESPACE}
 	square_url = ${SQUARE_URL_DEV}
-	image_tag = ""
-else
+	logLevel = dev
+else ifeq ($(env), prod)
 	context = ${PROD_CONTEXT}
 	namespace = ${PROD_NAMESPACE}
 	square_url = ${SQUARE_URL_PROD}
+	logLevel = prod
 endif
 
 install:
@@ -28,6 +29,7 @@ install:
 		--set square_access_token_prod=${SQUARE_ACCESS_TOKEN_PROD} \
 		--set square_application_id_sandbox=${SQUARE_APPLICATION_ID_SANDBOX} \
 		--set square_url=$(square_url) \
+		--set logLevel=$(logLevel) \
 		--debug
 
 delete:
