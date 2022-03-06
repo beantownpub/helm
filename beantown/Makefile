@@ -10,12 +10,12 @@ ifeq ($(env),dev)
 	context = ${DEV_CONTEXT}
 	namespace = ${DEV_NAMESPACE}
 	square_url = ${SQUARE_URL_DEV}
-	logLevel = dev
+	logLevel = tiny
 else ifeq ($(env), prod)
 	context = ${PROD_CONTEXT}
 	namespace = ${PROD_NAMESPACE}
 	square_url = ${SQUARE_URL_PROD}
-	logLevel = prod
+	logLevel = tiny
 endif
 
 install:

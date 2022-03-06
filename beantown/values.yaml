@@ -9,7 +9,7 @@ containerPort: 3000
 ingress:
   enabled: false
 
-logLevel: DEBUG
+logLevel: tiny
 
 nodeEnv: ""
 

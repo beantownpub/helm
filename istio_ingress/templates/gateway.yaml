@@ -12,14 +12,9 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "beantownpub.com"
-    - "*.beantownpub.com"
-    - "*.prod.beantownpub.com"
-    - "thehubpub.com"
-    - "*.prod.thehubpub.com"
-    - "www.thehubpub.com"
-    - "drdavisicecream.com"
-    - "www.drdavisicecream.com"
-    - "wavelengths-brookline.com"
-    - "www.wavelengths-brookline.com"
-    - "*.jalgraves.com"
+    - "{{ .Values.domain }}"
+    - "*.{{ .Values.domain }}"
+    - "*.{{ .Values.global.env }}.{{ .Values.domain }}"
+  {{- range .Values.additionalHosts }}
+    - {{ .| quote }}
+  {{- end }}

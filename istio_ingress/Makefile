@@ -14,6 +14,9 @@
 SHELL := /bin/bash
 
 context ?= ${CONTEXT}
+domain ?= jalgraves.com
+
+ONESHELL:
 
 deps:
 	helm dependencies update
@@ -22,6 +25,15 @@ namespace:
 	kubectl config use-context $(context)
 	kubectl create namespace istio-ingress && \
         kubectl label namespace istio-ingress istio-injection=enabled
+
+template:
+	helm template . \
+		--namespace istio-ingress \
+		--name-template=default-ingress \
+		--set global.env=$(env) \
+		--set domain=$(domain) \
+		--set additionalHosts="{foo.com, bar.buzz}" \
+		--debug
 
 install:
 	kubectl config use-context $(context)
