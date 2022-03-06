@@ -1,10 +1,11 @@
 # -include postgres/Makefile
+-include merch_api/Makefile.new
 .PHONY: all test clean
 export MAKE_PATH ?= $(shell pwd)
 export SELF ?= $(MAKE)
 SHELL := /bin/bash
 
-MAKE_FILES = ${MAKE_PATH}/**/Makefile ${MAKE_PATH}/Makefile
+MAKE_FILES = ${MAKE_PATH}/**/Makefile ${MAKE_PATH}/**/Makefile.* ${MAKE_PATH}/Makefile
 
 ifeq ($(env),dev)
 	context = ${DEV_CONTEXT}

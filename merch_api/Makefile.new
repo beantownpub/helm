@@ -1,0 +1,10 @@
+.PHONY: all test clean
+SHELL := /bin/bash
+export MAKE_PATH ?= $(shell pwd)
+
+## Publish merch-api Helm chart
+merch/publish:
+	cd merch_api && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add merch_api/
