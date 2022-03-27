@@ -18,6 +18,7 @@ spec:
     metadata:
       labels:
         app: {{ include "beantown.fullname" . }}
+        version: {{ .Values.image.tag | default .Chart.AppVersion }}
     spec:
       containers:
       - env:
@@ -78,6 +79,21 @@ spec:
             secretKeyRef:
               key: merch_api_port
               name: services
+        - name: KAFKA_BOOTSTRAP_SERVER
+          valueFrom:
+            secretKeyRef:
+              key: kafka_bootstrap_server
+              name: beantown-creds
+        - name: KAFKA_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: kafka_username
+              name: beantown-creds
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: kafka_password
+              name: beantown-creds
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:

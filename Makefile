@@ -1,20 +1,29 @@
 # -include postgres/Makefile
--include merch_api/Makefile.new
-.PHONY: all test clean
+-include merch_api/Makefile contact_api/Makefile menu_api/Makefile
+.PHONY: all test clean help
 export MAKE_PATH ?= $(shell pwd)
 export SELF ?= $(MAKE)
 SHELL := /bin/bash
 
-MAKE_FILES = ${MAKE_PATH}/**/Makefile ${MAKE_PATH}/**/Makefile.* ${MAKE_PATH}/Makefile
+MAKE_FILES = ${MAKE_PATH}/**/Makefile ${MAKE_PATH}/Makefile
 
-ifeq ($(env),dev)
-	context = ${DEV_CONTEXT}
-	namespace = ${DEV_NAMESPACE}
-else ifeq ($(env),prod)
-	context = ${PROD_CONTEXT}
-	namespace = ${PROD_NAMESPACE}
-else
-	env := dev
+name=$(firstword $(subst _,-,$(@D)))
+
+
+
+
+
+ifdef env
+	ifeq ($(env),dev)
+		context = ${DEV_CONTEXT}
+		namespace = ${DEV_NAMESPACE}
+		domain ?= jalgraves.com
+	else ifeq ($(env),prod)
+		context = ${PROD_CONTEXT}
+		namespace = ${PROD_NAMESPACE}
+	else
+		env := dev
+	endif
 endif
 
 ## Add Helm repos
@@ -90,23 +99,6 @@ app/creds/secret: context
 		--from-literal=db_port="${DB_PORT}" \
 		--from-literal=db_user="${DB_USER}"
 
-## Create Contact API secret
-contact/secret: context
-	@echo "\033[1;32m. . . Installing contact-api $(env) secret . . .\033[1;37m\n"
-	cd contact_api && make secret env=$(env)
-
-## Helm template Contact API secret
-contact/template: context
-	@echo "\033[1;32m. . . Helm templating contact-api $(env) . . .\033[1;37m\n"
-	cd contact_api && make template env=$(env)
-
-## Publish contact Helm chart
-contact/publish:
-	cd contact_api && helm package . && \
-		cd - && \
-		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add contact_api/
-
 ## Publish admin Helm chart
 admin/publish:
 	cd admin && helm package . && \
@@ -126,17 +118,12 @@ db/publish:
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add postgres/
 
-## Create Merch API secret
-merch/secret: context
-	@echo "\033[1;32m. . . Installing merch-api $(env) secret . . .\033[1;37m\n"
-	cd merch_api && make secret env=$(env)
-
 ## Create Users API secret
 users/secret: context
 	@echo "\033[1;32m. . . Installing users-api $(env) secret . . .\033[1;37m\n"
 	cd users_api && make secret env=$(env)
 
-secrets: app/creds/secret app/services/secret db/secret merch/secret users/secret app/square/secret beantown/secret
+secrets: app/creds/secret app/services/secret db/secret users/secret app/square/secret beantown/secret
 
 deploy: context namespaces secrets db/install
 
@@ -203,15 +190,6 @@ help/generate:
 	{ lastLine = $$0 }' $(MAKE_FILES) | sort -u
 	@printf "\n\n"
 
-## Install Contact API
-contact/install: context
-	@echo "\033[1;32m. . . Installing contact-api in $(env) . . .\033[1;37m\n"
-	cd contact_api && make install env=$(env) context=$(context)
-
-## Forward contact-api port locally
-contact/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/contact-api 5012:5012
-
 ## Template db Helm chart
 db/template: context
 	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"
@@ -226,29 +204,6 @@ db/install: context
 users/install: context
 	@echo "\033[1;32m. . . Installing users-api in $(env) . . .\033[1;37m\n"
 	cd users_api && make install env=$(env) context=$(context)
-
-## Install Menu API
-menu/install: context
-	@echo "\033[1;32m. . . Installing menu-api in $(env) . . .\033[1;37m\n"
-	cd menu_api && make install env=$(env) context=$(context)
-
-## Forward menu-api port locally
-menu/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/menu-api 5004:5004
-
-## Helm template Merch API
-merch/template: context
-	@echo "\033[1;32m. . . Helm templating merch-api $(env) . . .\033[1;37m\n"
-	cd merch_api && make template env=$(env)
-
-## Install Merch API
-merch/install: context
-	@echo "\033[1;32m. . . Installing menu-api in $(env) . . .\033[1;37m\n"
-	cd merch_api && make install env=$(env) context=$(context)
-
-## Forward merch-api port locally
-merch/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/merch-api 5000:5000
 
 ## Install Admin frontend
 admin/install: context
@@ -321,3 +276,10 @@ kill_pod: context
 
 logs: context
 	./scripts/get_pod_logs.sh $(namespace) $(pod)
+
+buzz ?= $(subst _,-,$(@D))
+foo_bar/install:
+	@echo $@
+	@echo "buzz $(buzz)"
+	@echo $(tag)
+	@echo $(subst _,-,$(@D))

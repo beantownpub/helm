@@ -1,34 +1,30 @@
 .PHONY: all test clean
+SHELL := /bin/bash
+export MAKE_PATH ?= $(shell pwd)
 
-name ?= merch-api
-tag ?= $(shell grep 'appVersion:' Chart.yaml | cut -f 2 -d' ')
-port ?= ${MERCH_API_PORT}
-log_level ?= ${MERCH_API_LOG_LEVEL}
+name := $(subst _,-,$(@D))
+# tag = $(shell grep 'appVersion:' $(@D)/Chart.yaml | cut -f 2 -d' ')
+port := ${MERCH_API_PORT}
+log_level := ${MERCH_API_LOG_LEVEL}
 
-ifeq ($(env),dev)
-	context = ${DEV_CONTEXT}
-	namespace = ${DEV_NAMESPACE}
-else ($(env),prod)
-	context = ${PROD_CONTEXT}
-	namespace = ${PROD_NAMESPACE}
-endif
 
-package:
-		helm package .
-
-clean:
-		rm *.tgz || true
-
-context:
+merch/context:
 	kubectl config use-context $(context)
 
-install:
-	kubectl config use-context $(context)
-	helm upgrade --install $(name) . \
+## Publish merch-api Helm chart
+merch_api/publish:
+	cd merch_api && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add merch_api/
+
+## Deploy merch-api to cluster
+merch_api/install: merch/context
+	cd $(@D)/ && \
+	helm upgrade $(subst _,-,$(@D)) . \
 		--namespace $(namespace) \
 		--set global.env=$(env) \
-		--set image.name=$(name) \
-		--set image.tag=$(tag) \
+		--set image.tag=$(shell grep 'appVersion:' $(@D)/Chart.yaml | cut -f 2 -d' ') \
 		--set api_user=${API_USER} \
 		--set api_pass=${API_PASS} \
 		--set db_host=${DB_HOST} \
@@ -38,13 +34,17 @@ install:
 		--set db_name=${MERCH_DB_NAME} \
 		--set frontend_origin_url=${FRONTEND_ORIGIN_URL} \
 		--set logLevel=$(log_level) \
+		--set domain=$(domain) \
+		--install \
 		--debug
 
-template:
+## Render merch-api templates
+merch/template:
+	cd merch_api/ && \
 	helm template . \
+		--namespace=$(namepsace) \
 		--name-template=$(name) \
 		--set global.env=$(env) \
-		--set image.name=$(image) \
 		--set image.tag=$(tag) \
 		--set api_user=${API_USER} \
 		--set api_pass=${API_PASS} \
@@ -56,13 +56,5 @@ template:
 		--set frontend_origin_url=${FRONTEND_ORIGIN_URL} \
 		--debug
 
-
-port_forward:
-	kubectl port-forward --namespace $(namespace) svc/$(name) $(port):$(port)
-
-secret: context
-	kubectl create secret generic merch-api-creds \
-		--namespace $(namespace) \
-		--from-literal=db_name="${MERCH_DB_NAME}" \
-		--from-literal=frontend_origin_url="${FRONTEND_ORIGIN_URL}" \
-		--from-literal=flask_secret_key="${FLASK_SECRET_KEY}"
+merch_api/port_forward: merch/context
+	kubectl port-forward --namespace $(namespace) svc/$(name) ${MERCH_API_PORT}:${MERCH_API_PORT}

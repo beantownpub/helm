@@ -2,7 +2,7 @@ apiVersion: v2
 name: beantown
 description: Beantown Pub frontend deployment
 type: application
-version: 0.1.2
-appVersion: 0.1.27-866030c
+version: 0.1.3
+appVersion: 0.1.34
 sources:
 - https://github.com/beantownpub/frontend

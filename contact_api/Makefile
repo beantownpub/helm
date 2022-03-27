@@ -1,9 +1,9 @@
 .PHONY: all test clean
 
-name ?= contact-api
-image ?= contact_api
-tag ?= $(shell grep 'appVersion:' Chart.yaml | cut -f 2 -d' ')
-port ?= 5012
+name := $(subst _,-,$(@D))
+image := contact-api
+# tag := $(shell grep 'appVersion:' $(@D)/Chart.yaml | cut -f 2 -d' ')
+port := 5012
 
 ifeq ($(env),dev)
 	context = ${DEV_CONTEXT}
@@ -19,17 +19,25 @@ else ifeq ($(env),prod)
 	slack_partys_webhook_url = ${SLACK_PARTYS_WEBHOOK_URL_PROD}
 	email_recipient = ${EMAIL_RECIPIENT}
 	log_level ?= INFO
-else
-	@echo "No Env specified!"
-	exit 1
 endif
 
-clean:
-		rm *.tgz || true
+contact/clean:
+		rm contact_api/*.tgz || true
 
-install:
+contact/context:
 	kubectl config use-context $(context)
-	helm upgrade --install $(name) . \
+
+## Publish contact Helm chart
+contact/publish:
+	cd contact_api && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add contact_api/
+
+## Deploy contact-api to cluster
+contact_api/install: contact/context
+	cd contact_api && \
+	helm upgrade --install contact-api . \
 		--namespace $(namespace) \
 		--set global.env=$(env) \
 		--set logLevel=$(log_level) \
@@ -49,8 +57,11 @@ install:
 		--set slack_partys_webhook_url=$(slack_partys_webhook_url) \
 		--set test_email_recipient="${TEST_EMAIL_RECIPIENT}" \
 		--debug
+	@echo $(name)
 
-template:
+## Render contact-api templates
+contact/template:
+	cd contact_api && \
 	helm template beantown/contact-api \
 		--name-template=$(name) \
 		--namespace $(namespace) \
@@ -72,5 +83,5 @@ template:
 		--set slack_partys_webhook_url=$(slack_partys_webhook_url) \
 		--debug
 
-port_forward:
+contact/port_forward: contact/context
 		kubectl port-forward --namespace $(namespace) svc/$(name) $(port):$(port)

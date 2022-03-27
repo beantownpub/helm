@@ -1,4 +1,4 @@
-{{- if eq .Values.global.env "prod" }}
+{{- if ne .Values.global.env "dev" }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -6,7 +6,7 @@ metadata:
 spec:
   hosts:
   - "{{ include "merch-api.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
-  - "{{ include "merch-api.fullname" . }}.{{ .Values.global.env }}.beantownpub.com"
+  - "{{ include "merch-api.fullname" . }}.{{ .Values.global.env }}.{{ .Values.domain }}"
 
   gateways:
   - istio-ingress/web-gateway

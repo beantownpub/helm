@@ -1,10 +1,10 @@
 .PHONY: all test clean
+SHELL := /bin/bash
 
-
-name ?= menu-api
-image ?= menu_api
-tag ?= $(shell grep 'appVersion:' Chart.yaml | cut -f 2 -d' ')
-port ?= ${MENU_API_PORT}
+name ?= $(subst _,-,$(@D))
+image := menu_api
+#tag := $(shell grep 'appVersion:' $(@D)/Chart.yaml | cut -f 2 -d' ')
+port := ${MENU_API_PORT}
 log_level ?= ${MENU_API_LOG_LEVEL}
 
 ifeq ($(env),dev)
@@ -13,19 +13,25 @@ ifeq ($(env),dev)
 else ifeq ($(env),prod)
 	context = ${PROD_CONTEXT}
 	namespace = ${PROD_NAMESPACE}
-else
-	@echo "No Env specified!"
-	exit 1
 endif
 
-clean:
+menu/clean:
 		rm *.tgz || true
 
-context:
+menu/context:
 	kubectl config use-context $(context)
 
-install:
-	kubectl config use-context $(context)
+## Publish menu-api Helm chart
+menu/publish:
+	cd menu_api && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add menu_api/
+
+## Deploy menu-api to a cluster
+menu/install: menu/context
+	@echo "\033[1;32m. . . Installing menu-api in $(env) . . .\033[1;37m\n"
+	cd menu_api && \
 	helm upgrade --install $(name) . \
 		--namespace $(namespace) \
 		--set global.env=$(env) \
@@ -35,7 +41,9 @@ install:
 		--set logLevel=$(log_level) \
 		--debug
 
-template:
+menu/template:
+	@echo "\033[1;32m. . . Templating menu-api in $(env) . . .\033[1;37m\n"
+	cd menu_api && \
 	helm template . \
 		--name-template=$(name) \
 		--set global.env=$(env) \
@@ -44,18 +52,19 @@ template:
 		--set logLevel=$(log_level) \
 		--debug
 
-
-port_forward:
+## Forward menu-api port
+menu/port_forward: menu/context
 		kubectl port-forward --namespace $(namespace) svc/$(name) $(port):$(port)
 
-stop_pf:
+menu/stop_pf:
 		../scripts/stop_port_forward.sh $(port)
 
-logs:
+menu/logs:
 		../scripts/get_pod_logs.sh $(namespace) $(name)
 
-describe:
+menu/describe:
 		../scripts/describe_pod.sh $(namespace) $(name)
 
-kill_pod:
-		../scripts/kill_pod.sh $(namespace) $(name)
+## Delete menu-api pod
+menu/kill: menu/context
+		./scripts/kill_pod.sh $(namespace) $(name)
