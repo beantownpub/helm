@@ -190,6 +190,10 @@ help/generate:
 	{ lastLine = $$0 }' $(MAKE_FILES) | sort -u
 	@printf "\n\n"
 
+## Forward db port
+db/port_forward: context
+	kubectl port-forward --namespace database svc/postgres 5432:5432
+
 ## Template db Helm chart
 db/template: context
 	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"

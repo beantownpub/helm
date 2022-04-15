@@ -58,3 +58,6 @@ merch/template:
 
 merch_api/port_forward: merch/context
 	kubectl port-forward --namespace $(namespace) svc/$(name) ${MERCH_API_PORT}:${MERCH_API_PORT}
+
+merch_api/port_forward/redis: merch/context
+	kubectl port-forward --namespace $(namespace) svc/merch-api 6379:6379
