@@ -15,27 +15,25 @@ else
 	@echo "You must specify an env"
 endif
 
-package:
-		helm package .
 
 context:
 	kubectl config use-context $(context)
 
-install:
-		helm upgrade --install $(name) . \
-			--namespace $(namespace) \
-			--set global.env=$(env) \
-			--debug
+install: context
+	helm upgrade --install $(name) . \
+		--namespace $(namespace) \
+		--set global.env=$(env) \
+		--debug
 
 template:
-		helm template . \
-			--name-template=$(name) \
-			--namespace $(namespace) \
-			--set global.env=$(env) \
-			--debug
+	helm template . \
+		--name-template=$(name) \
+		--namespace $(namespace) \
+		--set global.env=$(env) \
+		--debug
 
-port_forward:
-		kubectl port-forward --namespace $(namespace) svc/$(name) $(port):$(port)
+port_forward: context
+	kubectl port-forward --namespace $(namespace) svc/$(name) $(port):$(port)
 
 stop_pf:
-		../scripts/stop_port_forward.sh $(port)
+	../scripts/stop_port_forward.sh $(port)

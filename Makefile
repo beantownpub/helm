@@ -263,9 +263,26 @@ wavelengths/publish:
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add wavelengths/
-## Install DrDavisIceCream frontend
+
+## Publish bentown Helm chart
+drdavisicecream/publish:
+	cd drdavisicecream && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add drdavisicecream/
+
+## Create drdavisicecream secret
+drdavisicecream/secret: context
+	@echo "\033[1;32mInstalling drdavisicecream $(env) secret . . .\033[1;37m\n"
+	cd drdavisicecream && make secret env=$(env)
+
+## Install drdavisicecream frontend
 drdavisicecream/install: context
 	cd drdavisicecream && make install env=$(env) context=$(context)
+
+## Forward drdavisicecream port locally k8s_port:local_port
+drdavisicecream/port_forward: context
+	kubectl port-forward --namespace $(namespace) svc/drdavisicecream 3034:3034
 
 ## Forward port for Cilium Hubble UI
 hubble/port_forward:
