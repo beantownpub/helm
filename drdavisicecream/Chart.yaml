@@ -3,6 +3,6 @@ name: drdavisicecream
 description: Dr. Davis Ice Cream site deployment
 type: application
 version: 0.1.5
-appVersion: 0.1.6
+appVersion: 0.1.7-7d323fe
 sources:
 - https://github.com/jalgraves/drdavisicecream

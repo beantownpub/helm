@@ -10,9 +10,6 @@ MAKE_FILES = ${MAKE_PATH}/**/Makefile ${MAKE_PATH}/Makefile
 name=$(firstword $(subst _,-,$(@D)))
 
 
-
-
-
 ifdef env
 	ifeq ($(env),dev)
 		context = ${DEV_CONTEXT}
@@ -227,6 +224,13 @@ beantown/publish:
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add beantown/
+
+## Publish thehubpub Helm chart
+thehubpub/publish:
+	cd thehubpub && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add thehubpub/
 
 ## Create Beantown secret
 beantown/secret: context
