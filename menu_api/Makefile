@@ -22,8 +22,9 @@ menu/context:
 	kubectl config use-context $(context)
 
 ## Publish menu-api Helm chart
-menu/publish:
-	cd menu_api && helm package . && \
+menu_api/publish:
+	cd menu_api && \
+		helm package . && \
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add menu_api/
@@ -32,7 +33,7 @@ menu/publish:
 menu/install: menu/context
 	@echo "\033[1;32m. . . Installing menu-api in $(env) . . .\033[1;37m\n"
 	cd menu_api && \
-	helm upgrade --install $(name) . \
+	helm upgrade --install menu-api . \
 		--namespace $(namespace) \
 		--set global.env=$(env) \
 		--set image.name=$(image) \
@@ -53,7 +54,7 @@ menu/template:
 		--debug
 
 ## Forward menu-api port
-menu/port_forward: menu/context
+menu_api/port_forward: menu/context
 		kubectl port-forward --namespace $(namespace) svc/$(name) $(port):$(port)
 
 menu/stop_pf:

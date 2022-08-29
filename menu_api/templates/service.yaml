@@ -7,5 +7,8 @@ spec:
   - name: "tcp-{{ .Values.appName }}"
     port: {{ .Values.containerPort }}
     targetPort: {{ .Values.containerPort }}
+  - name: http
+    port: 80
+    targetPort: {{ .Values.containerPort }}
   selector:
     app: {{ include "menu-api.fullname" . }}

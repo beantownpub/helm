@@ -120,7 +120,7 @@ users/secret: context
 	@echo "\033[1;32m. . . Installing users-api $(env) secret . . .\033[1;37m\n"
 	cd users_api && make secret env=$(env)
 
-secrets: app/creds/secret app/services/secret db/secret users/secret app/square/secret beantown/secret
+secrets: app/creds/secret app/services/secret users/secret app/square/secret beantown/secret
 
 deploy: context namespaces secrets db/install
 

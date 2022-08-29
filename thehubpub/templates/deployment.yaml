@@ -50,6 +50,11 @@ spec:
             secretKeyRef:
               key: menu_api_host
               name: services
+        - name: MENU_API_TARGET_PORT
+          valueFrom:
+            secretKeyRef:
+              key: menu_api_port
+              name: services
         - name: MENU_API_PROTOCOL
           valueFrom:
             secretKeyRef:
