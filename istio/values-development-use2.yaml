@@ -1,0 +1,50 @@
+# albCertificateArn
+# This is the AWS ACM certificate arn for *.use2.development.beantownpub.com
+# The ALB is only reachable on the private network and used as
+# gateway to connect to prometheus and kiali when connected you're
+# on the tailscale VPN
+# The arns are located in the outputs from the terraform workspace development-aws-route53-use2
+# https://app.terraform.io/app/jalgraves/workspaces/development-aws-route53-use2
+
+certArns:
+  - arn:aws:acm:us-east-2:112138771825:certificate/09d1213a-51f1-4168-962b-fe856a03fc70
+
+ingress:
+  albPrivate:
+    enabled: false
+    externalDns:
+      # hostnames that aws-external-dns will create DNS records for in route53 to
+      # point to the private Application Load Balancer
+      hostnames: []
+
+  albPublic:
+    externalDns:
+      hostnames:
+        - "*.use2.development.aws.beantownpub.com"
+  gatewayDomains:
+    - "*.use2.development.aws.beantownpub.com"
+
+environment: development
+
+gateway:
+  replicaCount: 1
+
+istiod:
+  pilot:
+    autoscaleMin: 1
+    replicaCount: 1
+  telemetry:
+    enabled: true
+  # To disable access logs comment out accessLogFile and accessLogEncoding lines
+  meshConfig:
+    # accessLogFile: /dev/stdout
+    # accessLogEncoding: JSON
+    defaultConfig:
+      discoveryAddress: istiod.istio-system.svc:15012
+      tracing:
+        sampling: 10
+        zipkin:
+          address: jaeger-collector.istio-system:9411
+
+regionCode: use1
+sslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06

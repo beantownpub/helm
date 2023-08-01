@@ -1,0 +1,16 @@
+# By default the istio-ingress LoadBalancer service terminates TLS at ALB so
+# gateway is configured to listen on port 443 for plain-text HTTP traffic
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: web-gateway
+  namespace: istio-system
+spec:
+  selector:
+    app: istio-ingressgateway
+  servers:
+  - port:
+      number: 443
+      name: http-443
+      protocol: HTTP
+    hosts: {{- toYaml .Values.ingress.gatewayDomains | nindent 6 }}

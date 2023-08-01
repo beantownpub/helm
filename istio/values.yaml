@@ -1,0 +1,56 @@
+albCertificateArn:
+certArns:
+environment:
+regionCode:
+sslPolicy:
+
+ingress:
+  albPrivate:
+    enabled: true
+    accessLogs:
+      enabled: true
+    externalDns:
+      hostnames: []
+  albPublic:
+    enabled: true
+    accessLogs:
+      enabled: true
+    externalDns:
+      hostnames: []
+  gatewayDomains: []
+gateway:
+  nodeSelector:
+    role: istio
+  service:
+    type: NodePort
+    annotations: {}
+
+  tolerations:
+  - effect: NoSchedule
+    key: node-role/istio
+    operator: Exists
+
+istiod:
+  global:
+    defaultPodDisruptionBudget:
+      enabled: false
+    logAsJson: true
+    proxy:
+      excludeOutboundPorts: "8125,8126,8200"
+  pilot:
+    env:
+      # If enabled, Pilot will send only clusters that referenced in gateway virtual services attached to gateway
+      # https://istio.io/latest/docs/reference/commands/pilot-agent/
+      PILOT_FILTER_GATEWAY_CLUSTER_CONFIG: true
+    nodeSelector:
+      role: istio
+    resources:
+      requests:
+        memory: 1Gi
+    tolerations:
+    - effect: NoSchedule
+      key: node-role/istio
+      operator: Exists
+
+proxyV2:
+  enabled: true

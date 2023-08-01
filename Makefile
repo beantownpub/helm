@@ -74,10 +74,10 @@ istio/install: istio/base/install istio/istiod/install gateway_ns istio/gateway/
 
 ## Publish bentown Helm chart
 istio/publish:
-	cd istio_ingress && helm package . && \
+	cd istio/ && helm package . && \
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add istio_ingress/
+		git add istio/
 
 namespaces: context
 	@echo "\033[1;32m. . . Installing $(env) namespaces . . .\033[1;37m\n"

@@ -1,0 +1,15 @@
+apiVersion: v2
+name: istio
+description: Deploy Istio
+version: 0.1.0
+
+dependencies:
+  - name: gateway
+    version: 1.18.1
+    repository: https://istio-release.storage.googleapis.com/charts
+  - name: istiod
+    version: 1.18.1
+    repository: https://istio-release.storage.googleapis.com/charts
+  - name: base
+    version: 1.18.1
+    repository: https://istio-release.storage.googleapis.com/charts
