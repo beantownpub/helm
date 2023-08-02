@@ -29,7 +29,7 @@ spec:
   - key: topology.kubernetes.io/zone
     operator: In
     values:
-    - {{. Values.aws.region }}
+    - {{ .Values.aws.region }}
   - key: karpenter.k8s.aws/instance-size
     operator: In
     values:
