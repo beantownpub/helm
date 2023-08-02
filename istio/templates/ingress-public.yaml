@@ -19,7 +19,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-policy: {{ .Values.sslPolicy }}
     {{- if .Values.ingress.albPublic.accessLogs.enabled }}
-    alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=hqo-{{ .Values.environment }}-{{ .Values.regionCode }}-alb-access-logs
+    alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket={{ .Values.environment }}-{{ .Values.regionCode }}-alb-access-logs
     {{- end }}
     alb.ingress.kubernetes.io/actions.ssl-redirect: |-
       {

@@ -72,12 +72,19 @@ istio/gateway/install: context
 ## Install Istio
 istio/install: istio/base/install istio/istiod/install gateway_ns istio/gateway/install
 
-## Publish bentown Helm chart
+## Publish istio Helm chart
 istio/publish:
 	cd istio/ && helm package . && \
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add istio/
+
+## Publish karpenter chart
+karpenter/publish:
+	cd karpenter/ && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add karpenter/
 
 namespaces: context
 	@echo "\033[1;32m. . . Installing $(env) namespaces . . .\033[1;37m\n"

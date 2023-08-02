@@ -6,19 +6,21 @@ sslPolicy:
 
 ingress:
   albPrivate:
-    enabled: true
+    enabled: false
     accessLogs:
-      enabled: true
+      enabled: false
     externalDns:
       hostnames: []
   albPublic:
     enabled: true
     accessLogs:
-      enabled: true
+      enabled: false
     externalDns:
       hostnames: []
   gatewayDomains: []
 gateway:
+  nodeSelector:
+    role: istio
   service:
     type: NodePort
     annotations: {}
@@ -33,6 +35,8 @@ istiod:
     proxy:
       excludeOutboundPorts: "8125,8126,8200"
   pilot:
+    nodeSelector:
+      role: istio
     env:
       # If enabled, Pilot will send only clusters that referenced in gateway virtual services attached to gateway
       # https://istio.io/latest/docs/reference/commands/pilot-agent/
