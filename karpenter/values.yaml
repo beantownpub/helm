@@ -1,4 +1,5 @@
 aws:
+  instanceProfile:
   region:
 clusterName:
 env:

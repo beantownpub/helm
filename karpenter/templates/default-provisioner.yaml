@@ -1,13 +1,15 @@
 apiVersion: karpenter.sh/v1alpha5
 kind: Provisioner
 metadata:
-  name: {{ .Values.env }}-provisioner
+  name: default-provisioner
 spec:
   limits:
     resources:
       cpu: 1k
   providerRef:
     name: default
+  labels:
+    role: istio
   requirements:
   - key: kubernetes.io/arch
     operator: In
@@ -20,6 +22,7 @@ spec:
   - key: karpenter.sh/capacity-type
     operator: In
     values:
+    - on-demand
     - spot
   - key: karpenter.k8s.aws/instance-family
     operator: In
@@ -33,6 +36,7 @@ spec:
   - key: karpenter.k8s.aws/instance-size
     operator: In
     values:
+    - small
     - medium
     - large
   ttlSecondsAfterEmpty: 30

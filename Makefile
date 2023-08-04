@@ -79,6 +79,13 @@ istio/publish:
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add istio/
 
+## Publish pod-identity-webhook Helm chart
+pod-identity-webhook/publish:
+	cd pod-identity-webhook/ && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add pod-identity-webhook/
+
 ## Publish karpenter chart
 karpenter/publish:
 	cd karpenter/ && helm package . && \
