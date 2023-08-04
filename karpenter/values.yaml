@@ -1,5 +1,7 @@
 aws:
   instanceProfile:
-  region:
+  availabilityZones:
+    - us-east-2a
+    - us-east-2b
 clusterName:
 env:
