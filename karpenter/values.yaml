@@ -11,6 +11,7 @@ aws:
   availabilityZones:
     - us-east-2a
     - us-east-2b
+  sshPublicKey:
 clusterName:
 consolidation:
   enabled: false

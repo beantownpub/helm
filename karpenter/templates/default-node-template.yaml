@@ -21,5 +21,12 @@ spec:
     karpenter.sh/discovery/{{ .Values.clusterName }}: {{ .Values.clusterName }}
   tags:
     karpenter.sh/discovery/{{ .Values.clusterName }}: {{ .Values.clusterName }}
-    Name: "{{ .Values.clusterName }}-default-node-template"
+    Name: "{{ .Values.clusterName }}-k8s-worker"
     Provisioner: karpenter
+  userData: |
+    #!/bin/bash
+    mkdir -p /home/ec2-user/.ssh/
+    touch /home/ec2-user/.ssh/authorized_keys
+    echo {{ .Values.aws.sshPublicKey }} >> /home/ec2-user/.ssh/authorized_keys
+    chmod -R go-w ~ec2-user/.ssh/authorized_keys
+    chown -R ec2-user ~ec2-user/.ssh
