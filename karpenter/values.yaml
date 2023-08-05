@@ -18,4 +18,3 @@ defaultRole: worker
 env:
 kubeletConfiguration:
   maxPods: 110
-stsRegionalEndpoint: false

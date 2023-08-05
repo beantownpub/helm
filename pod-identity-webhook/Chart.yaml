@@ -1,4 +1,4 @@
 apiVersion: v2
 name: pod-identity-webhook
 description: Deploy pod-identity-webhook for IRSA
-version: 0.1.2
+version: 0.1.3

@@ -26,6 +26,7 @@ spec:
         - --annotation-prefix={{ .Values.annotationPrefix }}
         - --token-audience={{ .Values.tokenAudience }}
         - --tls-cert=/etc/webhook/certs/tls.crt
+        - --sts-regional-endpoint={{ .Values.stsRegionalEndpoint }}
         - --v={{ .Values.logLevel }}
         - --logtostderr
         volumeMounts:

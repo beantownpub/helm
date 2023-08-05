@@ -5,3 +5,4 @@ logLevel: "5"
 region: us-east-2
 replicaCount: 1
 tokenAudience: sts.amazonaws.com
+stsRegionalEndpoint: false
