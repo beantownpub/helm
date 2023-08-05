@@ -3,14 +3,14 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: pod-identity-webhook
   annotations:
-    cert-manager.io/inject-ca-from: default/pod-identity-webhook
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/pod-identity-webhook
 webhooks:
 - name: pod-identity-webhook.amazonaws.com
   failurePolicy: Ignore
   clientConfig:
     service:
       name: pod-identity-webhook
-      namespace: default
+      namespace: {{ .Release.Namespace }}
       path: "/mutate"
   rules:
   - operations: [ "CREATE" ]

@@ -22,7 +22,7 @@ spec:
         - --in-cluster=false
         - --namespace={{ .Release.Namespace }}
         - --service-name=pod-identity-webhook
-        - --aws-default-region={{ .Values.region}}
+        - --aws-default-region={{ .Values.region }}
         - --annotation-prefix={{ .Values.annotationPrefix }}
         - --token-audience={{ .Values.tokenAudience }}
         - --tls-cert=/etc/webhook/certs/tls.crt
@@ -51,12 +51,12 @@ metadata:
   name: pod-identity-webhook
 spec:
   secretName: pod-identity-webhook-cert
-  commonName: "pod-identity-webhook.default.svc"
+  commonName: "pod-identity-webhook.{{ .Release.Namespace }}.svc"
   dnsNames:
   - "pod-identity-webhook"
-  - "pod-identity-webhook.default"
-  - "pod-identity-webhook.default.svc"
-  - "pod-identity-webhook.default.svc.local"
+  - "pod-identity-webhook.{{ .Release.Namespace }}"
+  - "pod-identity-webhook.{{ .Release.Namespace }}.svc"
+  - "pod-identity-webhook.{{ .Release.Namespace }}.svc.local"
   isCA: true
   duration: 2160h # 90d
   renewBefore: 360h # 15d
