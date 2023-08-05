@@ -13,8 +13,9 @@ aws:
     - us-east-2b
 clusterName:
 consolidation:
-  enabled: true
+  enabled: false
 defaultRole: worker
 env:
 kubeletConfiguration:
   maxPods: 110
+stsRegionalEndpoint: false

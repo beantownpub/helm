@@ -26,14 +26,16 @@ spec:
         - spot
     - key: karpenter.k8s.aws/instance-family
       operator: In
-      values: {{- toYaml .Values.aws.instanceTypes | nindent 6 }}
+      values: {{- toYaml .Values.aws.instanceTypes | nindent 8 }}
     - key: topology.kubernetes.io/zone
       operator: In
-      values: {{- toYaml .Values.aws.availabilityZones | nindent 6 }}
+      values: {{- toYaml .Values.aws.availabilityZones | nindent 8 }}
     - key: karpenter.k8s.aws/instance-size
       operator: In
-      values: {{- toYaml .Values.aws.instanceSizes | nindent 6 }}
+      values: {{- toYaml .Values.aws.instanceSizes | nindent 8 }}
+  {{- if not .Values.consolidation.enabled }}
   ttlSecondsAfterEmpty: 30
+  {{- end }}
   consolidation:
     enabled: {{ .Values.consolidation.enabled }}
   kubeletConfiguration:
