@@ -4,4 +4,9 @@ aws:
     - us-east-2a
     - us-east-2b
 clusterName:
+consolidation:
+  enabled: true
+defaultRole: worker
 env:
+kubeletConfiguration:
+  maxPods: 110

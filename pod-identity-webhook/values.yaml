@@ -1,3 +1,7 @@
-caBundle:
+annotationPrefix: eks.amazonaws.com
+image:
+  repository: amazon/amazon-eks-pod-identity-webhook
 logLevel: "5"
 region: us-east-2
+replicaCount: 1
+tokenAudience: sts.amazonaws.com

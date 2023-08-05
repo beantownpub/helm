@@ -9,7 +9,7 @@ spec:
   providerRef:
     name: default
   labels:
-    role: istio
+    role: {{ .Values.defaultRole }}
   requirements:
   - key: kubernetes.io/arch
     operator: In
@@ -39,3 +39,8 @@ spec:
     - medium
     - large
   ttlSecondsAfterEmpty: 30
+  consolidation:
+    enabled: {{ .Values.consolidation.enabled }}
+  kubeletConfiguration:
+    clusterDNS: ["10.96.0.10"]
+    maxPods: {{ .Values.kubeletConfiguration.maxPods }}

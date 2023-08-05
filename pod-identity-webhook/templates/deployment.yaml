@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pod-identity-webhook
-  namespace: default
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: pod-identity-webhook
@@ -16,16 +15,16 @@ spec:
       serviceAccountName: pod-identity-webhook
       containers:
       - name: pod-identity-webhook
-        image: amazon/amazon-eks-pod-identity-webhook
+        image: {{ .Values.image.repository }}
         imagePullPolicy: Always
         command:
         - /webhook
         - --in-cluster=false
-        - --namespace=default
+        - --namespace={{ .Release.Namespace }}
         - --service-name=pod-identity-webhook
         - --aws-default-region={{ .Values.region}}
-        - --annotation-prefix=eks.amazonaws.com
-        - --token-audience=sts.amazonaws.com
+        - --annotation-prefix={{ .Values.annotationPrefix }}
+        - --token-audience={{ .Values.tokenAudience }}
         - --tls-cert=/etc/webhook/certs/tls.crt
         - --v={{ .Values.logLevel }}
         - --logtostderr
@@ -49,7 +48,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: pod-identity-webhook
-  namespace: default
 spec:
   secretName: pod-identity-webhook-cert
   commonName: "pod-identity-webhook.default.svc"
