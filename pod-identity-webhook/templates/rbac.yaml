@@ -72,4 +72,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: pod-identity-webhook
-  namespace: default
+  namespace: {{ .Release.Namespace }}

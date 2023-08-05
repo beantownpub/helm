@@ -1,5 +1,13 @@
 aws:
   instanceProfile:
+  instanceTypes:
+    - t3
+    - t3a
+    - t4g
+  instanceSizes:
+    - small
+    - medium
+    - large
   availabilityZones:
     - us-east-2a
     - us-east-2b

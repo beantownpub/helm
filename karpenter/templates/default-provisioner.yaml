@@ -11,33 +11,28 @@ spec:
   labels:
     role: {{ .Values.defaultRole }}
   requirements:
-  - key: kubernetes.io/arch
-    operator: In
-    values:
-    - amd64
-  - key: kubernetes.io/os
-    operator: In
-    values:
-    - linux
-  - key: karpenter.sh/capacity-type
-    operator: In
-    values:
-    - on-demand
-    - spot
-  - key: karpenter.k8s.aws/instance-family
-    operator: In
-    values:
-    - t3
-    - t3a
-  - key: topology.kubernetes.io/zone
-    operator: In
-    values: {{- toYaml .Values.aws.availabilityZones | nindent 8 }}
-  - key: karpenter.k8s.aws/instance-size
-    operator: In
-    values:
-    - small
-    - medium
-    - large
+    - key: kubernetes.io/arch
+      operator: In
+      values:
+        - amd64
+    - key: kubernetes.io/os
+      operator: In
+      values:
+        - linux
+    - key: karpenter.sh/capacity-type
+      operator: In
+      values:
+        - on-demand
+        - spot
+    - key: karpenter.k8s.aws/instance-family
+      operator: In
+      values: {{- toYaml .Values.aws.instanceTypes | nindent 6 }}
+    - key: topology.kubernetes.io/zone
+      operator: In
+      values: {{- toYaml .Values.aws.availabilityZones | nindent 6 }}
+    - key: karpenter.k8s.aws/instance-size
+      operator: In
+      values: {{- toYaml .Values.aws.instanceSizes | nindent 6 }}
   ttlSecondsAfterEmpty: 30
   consolidation:
     enabled: {{ .Values.consolidation.enabled }}
