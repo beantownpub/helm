@@ -1,3 +1,7 @@
+apiAddress:
+apiPort: 6443
+caCertHash:
+joinToken:
 aws:
   instanceProfile:
   instanceTypes:

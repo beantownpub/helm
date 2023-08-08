@@ -15,6 +15,8 @@ spec:
         encrypted: true
         deleteOnTermination: true
         throughput: 750
+  amiSelector:
+    cpco.io/ami/type: k8s-worker
   subnetSelector:
     Name: "{{ .Values.clusterName }}-private*"
   securityGroupSelector:
@@ -23,6 +25,8 @@ spec:
     karpenter.sh/discovery/{{ .Values.clusterName }}: {{ .Values.clusterName }}
     Name: "{{ .Values.clusterName }}-k8s-worker"
     Provisioner: karpenter
+  metadataOptions:
+    httpEndpoint: enabled
   userData: |
     #!/bin/bash
     mkdir -p /home/ec2-user/.ssh/
@@ -30,3 +34,22 @@ spec:
     echo {{ .Values.aws.sshPublicKey }} >> /home/ec2-user/.ssh/authorized_keys
     chmod -R go-w ~ec2-user/.ssh/authorized_keys
     chown -R ec2-user ~ec2-user/.ssh
+
+    NODE_NAME=$(hostname)
+    sudo cat <<EOF | sudo tee cluster-join.yaml
+    apiVersion: kubeadm.k8s.io/v1beta3
+    kind: JoinConfiguration
+    discovery:
+      bootstrapToken:
+        token: {{ .Values.joinToken }}
+        apiServerEndpoint: {{ .Values.apiAddress }}:{{ .Values.apiPort }}"
+        caCertHashes:
+          - {{ .Values.caCertHash }}
+    nodeRegistration:
+      name: "$NODE_NAME"
+      kubeletExtraArgs:
+        node-labels: "role=worker"
+    EOF
+
+    sudo kubeadm join \
+      --config cluster-join.yaml
