@@ -48,14 +48,14 @@ spec:
           pathType: Prefix
         - backend:
             service:
-              name: istio-ingressgateway
+              name: {{ .Values.ingress.serviceName }}
               port:
                 number: 15021
           path: /healthz/ready
           pathType: Prefix
         - backend:
             service:
-              name: istio-ingressgateway
+              name: {{ .Values.ingress.serviceName }}
               port:
                 number: 443
           path: /

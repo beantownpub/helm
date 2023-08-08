@@ -42,7 +42,7 @@ spec:
     discovery:
       bootstrapToken:
         token: {{ .Values.joinToken }}
-        apiServerEndpoint: {{ .Values.apiAddress }}:{{ .Values.apiPort }}"
+        apiServerEndpoint: {{ .Values.apiAddress }}:{{ .Values.apiPort }}
         caCertHashes:
           - {{ .Values.caCertHash }}
     nodeRegistration:
