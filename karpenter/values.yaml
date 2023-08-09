@@ -1,6 +1,7 @@
 apiAddress:
 apiPort: 6443
 caCertHash:
+controlPlaneEndpoint:
 joinToken:
 aws:
   instanceProfile:

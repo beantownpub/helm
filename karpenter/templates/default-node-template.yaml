@@ -34,7 +34,7 @@ spec:
     echo {{ .Values.aws.sshPublicKey }} >> /home/ec2-user/.ssh/authorized_keys
     chmod -R go-w ~ec2-user/.ssh/authorized_keys
     chown -R ec2-user ~ec2-user/.ssh
-
+    echo "{{ .Values.apiAddress }}   {{ .Values.controlPlaneEndpoint }}" >> /etc/hosts
     NODE_NAME=$(hostname)
     sudo cat <<EOF | sudo tee cluster-join.yaml
     apiVersion: kubeadm.k8s.io/v1beta3
