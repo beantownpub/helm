@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: aws-external-dns
+spec:
+  generators:
+    - list:
+        elements:
+          - branch: main
+            cluster: in-cluster
+            url: https://kubernetes.default.svc
+
+  template:
+    metadata:
+      name: 'aws-external-dns'
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: /istio
+    spec:
+      source:
+        path: istio/
+        repoURL: git@github.com:beantownpub/helm.git
+        targetRevision: '{{branch}}'
+        helm:
+          releaseName: istio
+          valueFiles:
+            - values.yaml
+      destination:
+        namespace: istio-system
+        server: '{{url}}'
+      ignoreDifferences:
+        - jsonPointers:
+            - /metadata/labels
+          kind: Secret
+      project: '{{cluster}}'
+      syncPolicy: {}
+        # automated:
+        #   selfHeal: false
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aws-external-dns
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /argo-cd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  source:
+    path: argo-cd/
+    repoURL: git@github.com:beantownpub/helm.git
+    targetRevision: master
+    helm:
+      releaseName: argo-cd
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true

@@ -26,7 +26,7 @@ argo-cd:
     metrics:
       enabled: false
     enabled: true
-    argocdUrl: https://cd.use1.hqo-shared.com/
+    argocdUrl: https://argo.use2.production.aws.beantownpub.com/
     secret:
       create: false
     notifiers:
@@ -118,9 +118,12 @@ argo-cd:
         - name: beantownpub-charts
           type: helm
           url: https://beantownpub.github.io/helm/
-        - name: prometheus-community
+        - name: karpenter
           type: helm
-          url: https://prometheus-community.github.io/helm-charts
+          url: oci://public.ecr.aws/karpenter/karpenter
+        - name: cert-manager
+          type: helm
+          url: https://charts.jetstack.io
       url: https://argo.use2.production.aws.beantownpub.com
 
     service:
