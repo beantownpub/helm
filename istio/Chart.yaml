@@ -1,7 +1,7 @@
 apiVersion: v2
 name: istio
 description: Deploy Istio
-version: 0.1.7
+version: 0.1.8
 
 dependencies:
   - name: gateway
