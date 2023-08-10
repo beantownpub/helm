@@ -146,7 +146,7 @@ env: production
 githubSshKey:
 regionCode: use2
 istio:
-  enabled: false
+  enabled: true
 okta:
   clientID:
   clientSecret:

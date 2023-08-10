@@ -1,5 +1,4 @@
 # This application is so that argocd can manage itself after initial deployment
-{{- if .Values.createApplications }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -18,9 +17,9 @@ spec:
     repoURL: git@github.com:beantownpub/helm.git
     targetRevision: master
     helm:
-          releaseName: argocd
+      releaseName: argo-cd
   project: default
-  syncPolicy: {}
-    # automated:
-    #   selfHeal: true
-{{- end }}
+  syncPolicy:
+    automated:
+      selfHeal: true
+
