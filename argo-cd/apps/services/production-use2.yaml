@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: production-apps
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - app: beantown
+            branch: master
+  template:
+    metadata:
+      name: '{{app}}'
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: /apps/helm-apps/services/{{app}}
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          selfHeal: true
+      source:
+        helm:
+          releaseName: '{{app}}'
+          valueFiles:
+            - values.yaml
+        repoURL: git@github.com:beantownpub/{{app}}.git
+        targetRevision: '{{branch}}'
+        path: helm/{{app}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: production
