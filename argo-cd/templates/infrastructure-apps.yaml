@@ -1,0 +1,23 @@
+{{- if .Values.createApplications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infrastructure-apps
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: '1'
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/manifest-generate-paths: /argo-cd/apps/infrastructure
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    path: argo-cd/apps/infrastructure
+    repoURL: git@github.com:beantownpub/helm.git
+    targetRevision: master
+  project: default
+  syncPolicy: {}
+    # automated:
+    #   selfHeal: false
+{{- end }}

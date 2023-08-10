@@ -1,0 +1,22 @@
+# On a new cluster argocd gets deployed before istio so it cannot deploy its own
+# virtual-service. When argocd deploys istio this virtual-service will be created
+# allowing external access to the argocd UI
+{{- if .Values.argoCd.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  hosts:
+  - "argo.{{ .Values.regionCode }}.{{ .Values.environment }}.aws.{{ .Values.org }}.com"
+  gateways:
+  - {{ .Release.Namespace }}/web-gateway
+  - mesh # applies to all the sidecars in the mesh
+  http:
+  - route:
+    - destination:
+        port:
+          number: 80
+        host: "argo-cd-server.argocd.svc.cluster.local"
+{{- end }}

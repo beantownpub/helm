@@ -43,34 +43,13 @@ cilium/install: update context
 		--set ipam.operator.clusterPoolIPv4PodCIDR="10.7.0.0/16"\
 		--debug
 
-istio/base/install: update context
-	@echo "\033[1;32m. . . Installing Istio base . . .\033[1;37m\n"
-	helm upgrade istio-base istio/base --install \
-		--namespace istio-system \
-		--version 1.12.1 \
-        --create-namespace
+## Publish istio Argo-CD chart
+argo/publish:
+	cd argo-cd/ && helm package . && \
+		cd - && \
+		helm repo index . --url https://beantownpub.github.io/helm/ && \
+		git add argo-cd/
 
-istio/istiod/install: update context
-	@echo "\033[1;32m. . . Installing Istiod . . .\033[1;37m\n"
-	helm upgrade istiod istio/istiod --install \
-		--version 1.12.1 \
-        --namespace istio-system
-
-gateway_ns: context
-	@echo "\033[1;32m. . . Installing istio-ingress namespace . . .\033[1;37m\n"
-	kubectl create namespace istio-ingress && \
-		kubectl label namespace istio-ingress istio-injection=enabled
-
-istio/gateway/install: context
-	@echo "\033[1;32m. . . Installing Istio Gateway . . .\033[1;37m\n"
-	helm upgrade istio-ingress istio/gateway --install \
-		--version 1.12.1 \
-        --namespace istio-ingress \
-        --set service.type=None && \
-		kubectl apply -n istio-ingress -f istio-ingress/templates
-
-## Install Istio
-istio/install: istio/base/install istio/istiod/install gateway_ns istio/gateway/install
 
 ## Publish istio Helm chart
 istio/publish:

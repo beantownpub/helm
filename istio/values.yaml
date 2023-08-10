@@ -1,10 +1,13 @@
 albCertificateArn:
+argoCd:
+  enabled: false
 certArns:
 cilium:
   hubble:
     enabled: true
-    hostname: hubble.cilium.svc.cluster.local
+
 environment:
+org:
 regionCode:
 sslPolicy:
 

@@ -1,0 +1,180 @@
+argo-cd:
+  crds:
+    keep: true
+  configs:
+    cm:
+      timeout.reconciliation: 7200s
+      url: https://argo.use2.production.aws.beantownpub.com
+    params:
+      reposerver.parallelism.limit: 5
+      # each controller replica uses two separate queues to process application reconciliation (milliseconds)
+      #  and app syncing (seconds). Number of queue processors for each queue is controlled by
+      #  --status-processors (20 by default) and --operation-processors (10 by default) flags.
+      statusProcessors: '50'
+      operation-processors: '25'
+      # refresh manifests every x seconds
+      appResyncPeriod: '600'
+      # repo server timeout in x seconds
+      repoServerTimeoutSeconds: '500'
+      server.insecure: true
+    secret:
+      # We're overriding this and creating instead from our templates so we can include Okta OIDC configs
+      # https://github.com/argoproj/argo-helm/blob/78e99e991119b5e982a0de6eea8c3609409033a5/charts/argo-cd/values.yaml#L498
+      createSecret: true
+      extra: {}
+  notifications:
+    metrics:
+      enabled: false
+    enabled: true
+    argocdUrl: https://cd.use1.hqo-shared.com/
+    secret:
+      create: false
+    notifiers:
+      service.slack: |
+        token: $slack-token
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    subscriptions:
+      - recipients:
+          - slack:argocd-notifications-test-2
+        triggers:
+          - on-deleted
+    templates:
+      template.app-deleted: |
+        message: |
+          {{if eq .serviceType "slack"}}:exclamation:{{end}}Application {{.app.metadata.name}} has been deleted.
+          Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
+    triggers:
+      trigger.on-deleted: |
+        - description: Application is deleted.
+          oncePer: app.metadata.name
+          send:
+          - app-deleted
+          when: app.metadata.deletionTimestamp != nil
+
+  applicationSet:
+    metrics:
+      enabled: false
+    enabled: true
+  controller:
+    env:
+      - name: ARGOCD_CONTROLLER_REPLICAS
+        value: '3'
+    replicas: 3
+    metrics:
+      enabled: false
+  redis:
+    exporter:
+      enabled: false
+  repoServer:
+    metrics:
+      enabled: true
+    replicas: 6
+    # Note: AVP config (for the secret manager, etc) can be passed in several ways. This is just one example
+    # https://argocd-vault-plugin.readthedocs.io/en/stable/config/
+    env:
+      - name: ARGOCD_EXEC_TIMEOUT
+        value: 5m
+    volumeMounts:
+      - name: custom-tools
+        mountPath: /usr/local/bin/argocd-vault-plugin
+        subPath: argocd-vault-plugin
+    volumes:
+      - name: custom-tools
+        emptyDir: {}
+    initContainers:
+      - name: download-tools
+        image: alpine:3.17
+        command: [sh, -c]
+
+        # Don't forget to update this to whatever the stable release version is
+        # Note the lack of the `v` prefix unlike the git tag
+        # https://github.com/argoproj-labs/argocd-vault-plugin/releases
+        env:
+          - name: AVP_VERSION
+            value: '1.13.0'
+        args:
+          - >-
+            wget -O argocd-vault-plugin
+            https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v${AVP_VERSION}/argocd-vault-plugin_${AVP_VERSION}_linux_amd64 &&
+            chmod +x argocd-vault-plugin &&
+            mv argocd-vault-plugin /custom-tools/
+        volumeMounts:
+          - mountPath: /custom-tools
+            name: custom-tools
+  fullnameOverride: argo-cd
+  nameOverride: argo-cd
+  global:
+    addPrometheusAnnotations: true
+    image:
+      tag: v2.5.2
+  dex:
+    enabled: false
+
+  server:
+    metrics:
+      enabled: false
+    config:
+      accounts.admin: 'apiKey, login'
+      repositories: |-
+        - name: beantown
+          type: git
+          url: git@github.com:beantownpub/beantown.git
+        - name: helm
+          type: git
+          url: git@github.com:beantownpub/helm.git
+        - name: argo
+          type: helm
+          url: https://argoproj.github.io/argo-helm
+        - name: bitnami
+          type: helm
+          url: https://charts.bitnami.com/bitnami
+        - name: aws
+          type: helm
+          url: https://aws.github.io/eks-charts
+        - name: aws-ebs-csi-driver
+          type: helm
+          url: https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+        - name: external-dns
+          type: helm
+          url: https://kubernetes-sigs.github.io/external-dns
+        - name: beantownpub-charts
+          type: helm
+          url: https://beantownpub.github.io/helm/
+        - name: prometheus-community
+          type: helm
+          url: https://prometheus-community.github.io/helm-charts
+      url: https://argo.use2.production.aws.beantownpub.com
+
+    service:
+      type: ClusterIP
+    url: https://argo.use2.production.aws.beantownpub.com
+
+
+
+    ## Certificate configuration
+    certificate:
+      enabled: false
+      domain: argocd.svc.cluster.local
+      issuer:
+        kind: ClusterIssuer
+        name: letsencrypt
+      additionalHosts:
+        - argo-cd-server
+      secretName: argocd-server-tls
+
+createApplications: true
+createProjects: true
+env: production
+githubSshKey:
+regionCode: use2
+istio:
+  enabled: false
+okta:
+  clientID:
+  clientSecret:
