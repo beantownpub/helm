@@ -13,7 +13,7 @@ spec:
     metadata:
       name: '{{app}}'
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: /apps/helm-apps/services/{{app}}
+        argocd.argoproj.io/manifest-generate-paths: /helm/{{app}}
     spec:
       project: default
       syncPolicy:

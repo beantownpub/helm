@@ -6,40 +6,24 @@ spec:
   generators:
     - list:
         elements:
-          - branch: master
-            cluster: development-use1
-            url: https://4AE83A9A9180DED3E5CAE6B02802B841.gr7.us-east-1.eks.amazonaws.com
-          - branch: master
-            cluster: load-use1
-            url: https://80C0C8489540DE4D0C15BB9F059CF749.gr7.us-east-1.eks.amazonaws.com
-          - branch: master
-            cluster: preprod-use1
-            url: https://C958D5EF1C87627B5B8F5DA8CEEFBF28.gr7.us-east-1.eks.amazonaws.com
-          - branch: master
-            cluster: production-euc1
-            url: https://87A3651DE5D19D3D0B8B1286B4B0ECAE.gr7.eu-central-1.eks.amazonaws.com
-          - branch: master
-            cluster: production-use1
-            url: https://049B7B611FE25C4D2731CA03FE2A765C.gr7.us-east-1.eks.amazonaws.com
-          - branch: master
-            cluster: shared-use1
+          - branch: main
+            cluster: in-cluster
             url: https://kubernetes.default.svc
 
   template:
     metadata:
       name: 'istio-{{cluster}}'
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: /apps/helm-apps/infrastructure/istio
+        argocd.argoproj.io/manifest-generate-paths: /istio
     spec:
       source:
-        path: apps/helm-apps/infrastructure/istio
-        repoURL: git@github.com:HqOapp/argo-cd.git
+        path: istio/
+        repoURL: git@github.com:beantownpub/helm.git
         targetRevision: '{{branch}}'
         helm:
-          releaseName: istio-ingressgateway
+          releaseName: istio
           valueFiles:
             - values.yaml
-            - values-{{cluster}}.yaml
       destination:
         namespace: istio-system
         server: '{{url}}'
