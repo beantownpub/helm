@@ -65,7 +65,7 @@ argo-cd:
     env:
       - name: ARGOCD_CONTROLLER_REPLICAS
         value: '3'
-    replicas: 3
+    replicas: 1
     metrics:
       enabled: false
   redis:
@@ -74,45 +74,17 @@ argo-cd:
   repoServer:
     metrics:
       enabled: true
-    replicas: 6
+    replicas: 1
     # Note: AVP config (for the secret manager, etc) can be passed in several ways. This is just one example
     # https://argocd-vault-plugin.readthedocs.io/en/stable/config/
     env:
       - name: ARGOCD_EXEC_TIMEOUT
         value: 5m
-    volumeMounts:
-      - name: custom-tools
-        mountPath: /usr/local/bin/argocd-vault-plugin
-        subPath: argocd-vault-plugin
-    volumes:
-      - name: custom-tools
-        emptyDir: {}
-    initContainers:
-      - name: download-tools
-        image: alpine:3.17
-        command: [sh, -c]
 
-        # Don't forget to update this to whatever the stable release version is
-        # Note the lack of the `v` prefix unlike the git tag
-        # https://github.com/argoproj-labs/argocd-vault-plugin/releases
-        env:
-          - name: AVP_VERSION
-            value: '1.13.0'
-        args:
-          - >-
-            wget -O argocd-vault-plugin
-            https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v${AVP_VERSION}/argocd-vault-plugin_${AVP_VERSION}_linux_amd64 &&
-            chmod +x argocd-vault-plugin &&
-            mv argocd-vault-plugin /custom-tools/
-        volumeMounts:
-          - mountPath: /custom-tools
-            name: custom-tools
   fullnameOverride: argo-cd
   nameOverride: argo-cd
   global:
-    addPrometheusAnnotations: true
-    image:
-      tag: v2.5.2
+    addPrometheusAnnotations: false
   dex:
     enabled: false
 
