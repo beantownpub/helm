@@ -1,0 +1,3 @@
+external-dns:
+  domainFilters:
+    - "use2.production.aws.beantownpub.com"
