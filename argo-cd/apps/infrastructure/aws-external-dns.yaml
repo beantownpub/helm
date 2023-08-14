@@ -17,6 +17,8 @@ spec:
       parameters:
         - name: "aws-external-dns.domainFilters[0]"
           value: "use2.production.aws.beantownpub.com"
+      valueFiles:
+        - values-production-use2.yaml
   project: default
   syncPolicy:
     automated:
