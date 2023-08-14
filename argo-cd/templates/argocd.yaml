@@ -19,7 +19,5 @@ spec:
     helm:
       releaseName: argo-cd
   project: default
-  syncPolicy:
-    automated:
-      selfHeal: true
+  syncPolicy: {}
 
