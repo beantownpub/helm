@@ -97,9 +97,24 @@ argo-cd:
         - name: beantown
           type: git
           url: git@github.com:beantownpub/beantown.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
+        - name: contact-api
+          type: git
+          url: git@github.com:beantownpub/contact-api.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
+        sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
         - name: helm
           type: git
           url: git@github.com:beantownpub/helm.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
         - name: argo
           type: helm
           url: https://argoproj.github.io/argo-helm

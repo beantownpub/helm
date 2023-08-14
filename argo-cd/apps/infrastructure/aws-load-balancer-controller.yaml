@@ -1,37 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: Application
 metadata:
-  name: istio
+  name: aws-load-balancer-controller
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /aws-load-balancer-controller
 spec:
-  generators:
-    - list:
-        elements:
-          - branch: main
-            cluster: in-cluster
-            url: https://kubernetes.default.svc
-
-  template:
-    metadata:
-      name: 'istio-{{cluster}}'
-      annotations:
-        argocd.argoproj.io/manifest-generate-paths: /istio
-    spec:
-      source:
-        path: istio/
-        repoURL: git@github.com:beantownpub/helm.git
-        targetRevision: '{{branch}}'
-        helm:
-          releaseName: istio
-          valueFiles:
-            - values.yaml
-      destination:
-        namespace: istio-system
-        server: '{{url}}'
-      ignoreDifferences:
-        - jsonPointers:
-            - /metadata/labels
-          kind: Secret
-      project: '{{cluster}}'
-      syncPolicy: {}
-        # automated:
-        #   selfHeal: false
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  source:
+    path: aws-load-balancer-controller/
+    repoURL: git@github.com:beantownpub/helm.git
+    targetRevision: main
+    helm:
+      releaseName: aws-load-balancer-controller
+      parameters:
+        - name: "aws-load-balancer-controller.clusterName"
+          value: "production-use2"
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true

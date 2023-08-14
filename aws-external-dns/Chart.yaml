@@ -1,0 +1,11 @@
+apiVersion: v2
+name: aws-external-dns
+description: aws-external-dns Helm chart for Kubernetes
+type: application
+appVersion: 0.13.5
+version: 1.0.0
+
+dependencies:
+  - name: external-dns
+    version: 1.13.0
+    repository: https://kubernetes-sigs.github.io/external-dns

@@ -1,57 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: aws-external-dns
-spec:
-  generators:
-    - list:
-        elements:
-          - branch: main
-            cluster: in-cluster
-            url: https://kubernetes.default.svc
-
-  template:
-    metadata:
-      name: 'aws-external-dns'
-      annotations:
-        argocd.argoproj.io/manifest-generate-paths: /istio
-    spec:
-      source:
-        path: istio/
-        repoURL: git@github.com:beantownpub/helm.git
-        targetRevision: '{{branch}}'
-        helm:
-          releaseName: istio
-          valueFiles:
-            - values.yaml
-      destination:
-        namespace: istio-system
-        server: '{{url}}'
-      ignoreDifferences:
-        - jsonPointers:
-            - /metadata/labels
-          kind: Secret
-      project: '{{cluster}}'
-      syncPolicy: {}
-        # automated:
-        #   selfHeal: false
----
-apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: aws-external-dns
   annotations:
-    argocd.argoproj.io/manifest-generate-paths: /argo-cd
+    argocd.argoproj.io/manifest-generate-paths: /aws-external-dns
 spec:
   destination:
     namespace: kube-system
     server: https://kubernetes.default.svc
   source:
-    path: argo-cd/
+    path: aws-external-dns/
     repoURL: git@github.com:beantownpub/helm.git
-    targetRevision: master
+    targetRevision: main
     helm:
-      releaseName: argo-cd
+      releaseName: aws-external-dns
+      parameters:
+        - name: "aws-external-dns.domainFilters[0]"
+          value: "use2.production.aws.beantownpub.com"
   project: default
   syncPolicy:
     automated:
