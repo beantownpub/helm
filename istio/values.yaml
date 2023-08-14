@@ -1,7 +1,7 @@
 albCertificateArn:
 argoCd:
   enabled: false
-certArns:
+certArns: []
 cilium:
   hubble:
     enabled: true
