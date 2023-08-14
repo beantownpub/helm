@@ -29,7 +29,7 @@ ingress:
       enabled: false
     externalDns:
       hostnames:
-        - "*.production.use2.aws.beantownpub.com"
+        - "*.use2.production.aws.beantownpub.com"
   gatewayDomains:
     - "*.beantownpub.com"
     - "*.thehubpub.com"

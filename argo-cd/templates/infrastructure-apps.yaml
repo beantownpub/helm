@@ -14,7 +14,7 @@ spec:
   source:
     path: argo-cd/apps/infrastructure
     repoURL: git@github.com:beantownpub/helm.git
-    targetRevision: master
+    targetRevision: main
   project: default
   syncPolicy:
     automated:

@@ -15,7 +15,7 @@ spec:
   source:
     path: argo-cd/apps/services
     repoURL: git@github.com:beantownpub/helm.git
-    targetRevision: master
+    targetRevision: main
     directory:
       recurse: true
   project: default
