@@ -15,7 +15,7 @@ spec:
   source:
     path: argo-cd/
     repoURL: git@github.com:beantownpub/helm.git
-    targetRevision: master
+    targetRevision: main
     helm:
       releaseName: argo-cd
   project: default

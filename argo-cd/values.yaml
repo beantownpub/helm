@@ -106,9 +106,6 @@ argo-cd:
           sshPrivateKeySecret:
             key: sshPrivateKey
             name: github-ssh
-        sshPrivateKeySecret:
-            key: sshPrivateKey
-            name: github-ssh
         - name: helm
           type: git
           url: git@github.com:beantownpub/helm.git
