@@ -7,6 +7,7 @@ certArns:
   - arn:aws:acm:us-east-2:112138771825:certificate/1f40cdb6-13b9-4d7d-a949-75ff72886768
   - arn:aws:acm:us-east-2:112138771825:certificate/768b1eba-32c1-42ff-91e4-cc6e864091d8
   - arn:aws:acm:us-east-2:112138771825:certificate/0ce52cbf-0f61-4e97-92ac-fa0460b67081
+  - arn:aws:acm:us-east-2:112138771825:certificate/ce7bbbcd-5bbc-4d17-8e83-d5224e143f0f
 cilium:
   hubble:
     enabled: true
