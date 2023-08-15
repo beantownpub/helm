@@ -35,6 +35,9 @@ spec:
     chmod -R go-w ~ec2-user/.ssh/authorized_keys
     chown -R ec2-user ~ec2-user/.ssh
     echo "{{ .Values.apiAddress }}   {{ .Values.controlPlaneEndpoint }}" >> /etc/hosts
+    AVAILABILITY_ZONE=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone)
+    INSTANCE_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
+    PROVIDER_ID="aws://$AVAILABILITY_ZONE/$INSTANCE_ID"
     NODE_NAME=$(hostname)
     sudo cat <<EOF | sudo tee cluster-join.yaml
     apiVersion: kubeadm.k8s.io/v1beta3
@@ -49,6 +52,7 @@ spec:
       name: "$NODE_NAME"
       kubeletExtraArgs:
         node-labels: "role=worker"
+        provider-id: "$PROVIDER_ID"
     EOF
 
     sudo kubeadm join \
