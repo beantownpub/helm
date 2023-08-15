@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: psql
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /psql
+spec:
+  destination:
+    namespace: database
+    server: https://kubernetes.default.svc
+  source:
+    path: psql/
+    repoURL: git@github.com:beantownpub/helm.git
+    targetRevision: main
+    helm:
+      releaseName: psql
+      valueFiles:
+        - values.yaml
+  project: default
+  syncPolicy: {}

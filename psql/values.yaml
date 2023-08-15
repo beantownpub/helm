@@ -36,11 +36,3 @@ service:
 
 resources: {}
 
-contact_db_name:
-db_admin_pass:
-db_admin_user:
-db_pass:
-db_user:
-menu_db_name:
-merch_db_name:
-users_db_name:
