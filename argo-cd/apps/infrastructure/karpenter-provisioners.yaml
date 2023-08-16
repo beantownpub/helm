@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: karpenter-provisioners
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /karpenter
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  source:
+    path: karpenter/
+    repoURL: git@github.com:beantownpub/helm.git
+    targetRevision: main
+    helm:
+      releaseName: karpenter-provisioners
+      parameters:
+        - name: "clusterName"
+          value: "production-use2"
+  project: default
+  syncPolicy: {}

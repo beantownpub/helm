@@ -17,5 +17,7 @@ spec:
       parameters:
         - name: "aws-load-balancer-controller.clusterName"
           value: "production-use2"
+        # - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+        #   value: "arn:aws:iam::112138771825:role/ProductionUse2K8sKarpenter"
   project: default
   syncPolicy: {}

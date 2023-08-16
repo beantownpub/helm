@@ -1,4 +1,0 @@
-apiVersion: v2
-name: default-ingress
-description: Istio ingress-gatway chart
-version: 0.0.1
