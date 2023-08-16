@@ -54,6 +54,9 @@ spec:
       kubeletExtraArgs:
         node-labels: "role=worker"
         provider-id: "$PROVIDER_ID"
+      taints:
+        - effect: NoExecute
+          key: node.cilium.io/agent-not-ready
     EOF
 
     sudo kubeadm join \
