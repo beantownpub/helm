@@ -18,6 +18,4 @@ spec:
         - name: "aws-load-balancer-controller.clusterName"
           value: "production-use2"
   project: default
-  syncPolicy:
-    automated:
-      selfHeal: true
+  syncPolicy: {}

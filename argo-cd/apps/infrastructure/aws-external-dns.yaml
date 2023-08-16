@@ -20,6 +20,4 @@ spec:
       valueFiles:
         - values-production-use2.yaml
   project: default
-  syncPolicy:
-    automated:
-      selfHeal: true
+  syncPolicy: {}
