@@ -45,9 +45,7 @@ spec:
     apiVersion: kubeadm.k8s.io/v1beta3
     kind: JoinConfiguration
     discovery:
-      bootstrapTokens:
-        - groups:
-          - system:bootstrappers:kubeadm:default-node-token
+      bootstrapToken:
         token: {{ .Values.joinToken }}
         apiServerEndpoint: {{ .Values.apiAddress }}:{{ .Values.apiPort }}
         caCertHashes:
