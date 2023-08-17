@@ -35,12 +35,40 @@ spec:
     chmod -R go-w ~ec2-user/.ssh/authorized_keys
     chown -R ec2-user ~ec2-user/.ssh
     echo "{{ .Values.apiAddress }}   {{ .Values.controlPlaneEndpoint }}" >> /etc/hosts
+    AMI_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/ami-id)
     AVAILABILITY_ZONE=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone)
+    CPUS=$(nproc)
     INSTANCE_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
     INSTANCE_TYPE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type)
+    INSTANCE_FAMILY=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type | cut -f1 -d'.')
+    INSTANCE_SIZE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type | cut -f2 -d'.')
+    INSTANCE_CATEGORY=$(echo $INSTANCE_FAMILY | cut -c-1-1)
+    GENERATION=$(echo $INSTANCE_FAMILY |  tr -dc '0-9')
+    HYPER_VISOR=$(wget -q -O - http://169.254.169.254/latest/meta-data/system)
     LIFE_CYCLE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-life-cycle)
+    MEMORY=$(free -m | awk '/^Mem:/{print $2}')
     PROVIDER_ID="aws://$AVAILABILITY_ZONE/$INSTANCE_ID"
     NODE_NAME=$(hostname)
+
+    LABELS=(
+      "karpenter.k8s.aws/instance-ami-id=$AMI_ID"
+      "karpenter.k8s.aws/instance-category=$INSTANCE_CATEGORY"
+      "karpenter.k8s.aws/instance-cpu=$CPUS"
+      "karpenter.k8s.aws/instance-encryption-in-transit-supported=false"
+      "karpenter.k8s.aws/instance-family=$INSTANCE_FAMILY"
+      "karpenter.k8s.aws/instance-generation=$GENERATION"
+      "karpenter.k8s.aws/instance-pods=110"
+      "karpenter.k8s.aws/instance-hypervisor=$HYPER_VISOR"
+      "karpenter.k8s.aws/instance-memory=$MEMORY"
+      "kubernetes.io/arch=amd64"
+      "node.kubernetes.io/instance-type=$INSTANCE_TYPE"
+      "topology.kubernetes.io/zone=$AVAILABILITY_ZONE"
+      "role=worker"
+      "karpenter.sh/initialized=true"
+      "karpenter.sh/registered=true"
+      "karpenter.sh/provisioner-name=default-provisioner"
+      "karpenter.sh/capacity-type=$LIFE_CYCLE"
+    )
 
     sudo cat <<EOF | sudo tee cluster-join.yaml
     apiVersion: kubeadm.k8s.io/v1beta3
@@ -54,7 +82,7 @@ spec:
     nodeRegistration:
       name: "$NODE_NAME"
       kubeletExtraArgs:
-        node-labels: "kubernetes.io/arch=amd64,node.kubernetes.io/instance-type=$INSTANCE_TYPE,topology.kubernetes.io/zone=$AVAILABILITY_ZONE,role=worker,karpenter.sh/initialized=true,karpenter.sh/registered=true,karpenter.sh/provisioner-name=default-provisioner,karpenter.sh/capacity-type=$LIFE_CYCLE"
+        node-labels: $(printf ",%s" "${LABELS[@]}")
         provider-id: "$PROVIDER_ID"
       taints:
         - effect: NoExecute
@@ -63,3 +91,5 @@ spec:
 
     sudo kubeadm join \
       --config cluster-join.yaml
+
+    sudo rm -f /var/lib/cloud/instance/scripts/part-002
