@@ -42,7 +42,7 @@ spec:
     INSTANCE_TYPE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type)
     INSTANCE_FAMILY=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type | cut -f1 -d'.')
     INSTANCE_SIZE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type | cut -f2 -d'.')
-    INSTANCE_CATEGORY=$(echo $INSTANCE_FAMILY | cut -c-1-1)
+    INSTANCE_CATEGORY=$(echo $INSTANCE_FAMILY | cut -c-1)
     GENERATION=$(echo $INSTANCE_FAMILY |  tr -dc '0-9')
     HYPER_VISOR=$(wget -q -O - http://169.254.169.254/latest/meta-data/system)
     LIFE_CYCLE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-life-cycle)
@@ -82,7 +82,7 @@ spec:
     nodeRegistration:
       name: "$NODE_NAME"
       kubeletExtraArgs:
-        node-labels: $(printf ",%s" "${LABELS[@]}")
+        node-labels: $(printf "%s," "${LABELS[@]}" | sed 's/,*$//g')
         provider-id: "$PROVIDER_ID"
       taints:
         - effect: NoExecute
