@@ -37,6 +37,7 @@ spec:
     echo "{{ .Values.apiAddress }}   {{ .Values.controlPlaneEndpoint }}" >> /etc/hosts
     AVAILABILITY_ZONE=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone)
     INSTANCE_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
+    LIFE_CYCLE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-life-cycle)
     PROVIDER_ID="aws://$AVAILABILITY_ZONE/$INSTANCE_ID"
     NODE_NAME=$(hostname)
 
@@ -44,7 +45,9 @@ spec:
     apiVersion: kubeadm.k8s.io/v1beta3
     kind: JoinConfiguration
     discovery:
-      bootstrapToken:
+      bootstrapTokens:
+        - groups:
+          - system:bootstrappers:kubeadm:default-node-token
         token: {{ .Values.joinToken }}
         apiServerEndpoint: {{ .Values.apiAddress }}:{{ .Values.apiPort }}
         caCertHashes:
@@ -52,7 +55,7 @@ spec:
     nodeRegistration:
       name: "$NODE_NAME"
       kubeletExtraArgs:
-        node-labels: "role=worker"
+        node-labels: "role=worker,karpenter.sh/initialized=true,karpenter.sh/registered=true,karpenter.sh/provisioner-name=default-provisioner,karpenter.sh/capacity-type=$LIFE_CYCLE"
         provider-id: "$PROVIDER_ID"
       taints:
         - effect: NoExecute
