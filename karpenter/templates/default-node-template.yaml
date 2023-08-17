@@ -54,7 +54,7 @@ spec:
     nodeRegistration:
       name: "$NODE_NAME"
       kubeletExtraArgs:
-        node-labels: "node.kubernetes.io/instance-type=$INSTANCE_TYPE,topology.kubernetes.io/zone=$AVAILABILITY_ZONE,role=worker,karpenter.sh/initialized=true,karpenter.sh/registered=true,karpenter.sh/provisioner-name=default-provisioner,karpenter.sh/capacity-type=$LIFE_CYCLE"
+        node-labels: "kubernetes.io/arch=amd64,node.kubernetes.io/instance-type=$INSTANCE_TYPE,topology.kubernetes.io/zone=$AVAILABILITY_ZONE,role=worker,karpenter.sh/initialized=true,karpenter.sh/registered=true,karpenter.sh/provisioner-name=default-provisioner,karpenter.sh/capacity-type=$LIFE_CYCLE"
         provider-id: "$PROVIDER_ID"
       taints:
         - effect: NoExecute
