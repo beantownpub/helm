@@ -37,6 +37,7 @@ spec:
     echo "{{ .Values.apiAddress }}   {{ .Values.controlPlaneEndpoint }}" >> /etc/hosts
     AVAILABILITY_ZONE=$(wget -q -O - http://169.254.169.254/latest/meta-data/placement/availability-zone)
     INSTANCE_ID=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-id)
+    INSTANCE_TYPE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-type)
     LIFE_CYCLE=$(wget -q -O - http://169.254.169.254/latest/meta-data/instance-life-cycle)
     PROVIDER_ID="aws://$AVAILABILITY_ZONE/$INSTANCE_ID"
     NODE_NAME=$(hostname)
@@ -53,7 +54,7 @@ spec:
     nodeRegistration:
       name: "$NODE_NAME"
       kubeletExtraArgs:
-        node-labels: "role=worker,karpenter.sh/initialized=true,karpenter.sh/registered=true,karpenter.sh/provisioner-name=default-provisioner,karpenter.sh/capacity-type=$LIFE_CYCLE"
+        node-labels: "node.kubernetes.io/instance-type=$INSTANCE_TYPE,topology.kubernetes.io/zone=$AVAILABILITY_ZONE,role=worker,karpenter.sh/initialized=true,karpenter.sh/registered=true,karpenter.sh/provisioner-name=default-provisioner,karpenter.sh/capacity-type=$LIFE_CYCLE"
         provider-id: "$PROVIDER_ID"
       taints:
         - effect: NoExecute
