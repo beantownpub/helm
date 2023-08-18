@@ -30,10 +30,7 @@ spec:
                 key: db_admin_pass
                 name: db-creds
           - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                key: db_admin_user
-                name: db-creds
+            value: wtf
           - name: PGUSER
             valueFrom:
               secretKeyRef:
