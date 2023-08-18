@@ -3,4 +3,4 @@ name: postgres
 description: A Helm chart for deploying Postgres to K8s
 type: application
 version: 0.1.4
-appVersion: "1.16.0"
+appVersion: "15.4"
