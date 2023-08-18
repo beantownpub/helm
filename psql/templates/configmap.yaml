@@ -6,7 +6,7 @@ data:
 
     echo "User: ${DB_USER}"
 
-    psql -v -U ${POSTGRES_USER} -d ${POSTGRES_USER} <<-EOSQL
+    psql -v -U ${PGUSER} -d ${PGUSER} <<-EOSQL
         CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASS}';
         CREATE DATABASE ${DB_USER};
         GRANT ALL PRIVILEGES ON DATABASE ${DB_USER} TO ${DB_USER};
