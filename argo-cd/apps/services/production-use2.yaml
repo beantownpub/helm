@@ -27,7 +27,7 @@ spec:
             - values.yaml
           parameters:
             - name: "global.env"
-              value: "production"
+              value: "prod"
         repoURL: git@github.com:beantownpub/{{app}}.git
         targetRevision: '{{branch}}'
         path: helm/{{app}}
