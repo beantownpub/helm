@@ -20,17 +20,20 @@ spec:
         argocd.argoproj.io/manifest-generate-paths: /helm/{{app}}
     spec:
       project: default
-      syncPolicy:
-        automated:
-          selfHeal: true
       source:
         helm:
           releaseName: '{{app}}'
           valueFiles:
             - values.yaml
+          parameters:
+            - name: "global.env"
+              value: "production"
         repoURL: git@github.com:beantownpub/{{app}}.git
         targetRevision: '{{branch}}'
         path: helm/{{app}}
       destination:
         server: https://kubernetes.default.svc
         namespace: production
+      syncPolicy: {}
+        #automated:
+          #selfHeal: true
