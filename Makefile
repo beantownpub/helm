@@ -1,4 +1,4 @@
-# -include postgres/Makefile
+# -include psql/Makefile
 -include merch_api/Makefile contact_api/Makefile menu_api/Makefile
 .PHONY: all test clean help
 export MAKE_PATH ?= $(shell pwd)
@@ -99,14 +99,14 @@ admin/publish:
 ## Create database secret
 db/secret: context
 	@echo "\033[1;32m. . . Installing DB $(env) secret . . .\033[1;37m\n"
-	cd postgres && make db/secret env=$(env)
+	cd psql && make db/secret env=$(env)
 
 ## Publish db Helm chart
 db/publish:
-	cd postgres && helm package . && \
+	cd psql && helm package . && \
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add postgres/
+		git add psql/
 
 ## Create Users API secret
 users/secret: context
@@ -182,17 +182,17 @@ help/generate:
 
 ## Forward db port
 db/port_forward: context
-	kubectl port-forward --namespace database svc/postgres 5432:5432
+	kubectl port-forward --namespace database svc/psql 5432:5432
 
 ## Template db Helm chart
 db/template: context
 	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"
-	cd postgres && make template env=$(env) context=$(context)
+	cd psql && make template env=$(env) context=$(context)
 
 ## Install database
 db/install: context
 	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"
-	cd postgres && make install env=$(env) context=$(context)
+	cd psql && make install env=$(env) context=$(context)
 
 ## Install Users API
 users/install: context

@@ -2,24 +2,24 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "postgres.fullname" . }}
+  name: {{ include "psql.fullname" . }}
 spec:
-  serviceName: {{ include "postgres.fullname" . }}
+  serviceName: {{ include "psql.fullname" . }}
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: psql
   template:
     metadata:
       labels:
-        app: postgres
+        app: psql
     spec:
-      serviceAccountName: {{ include "postgres.serviceAccountName" . }}
+      serviceAccountName: {{ include "psql.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - env:
-          - name: POSTGRES_PASSWORD
+          - name: psql_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: db_admin_pass
@@ -29,7 +29,7 @@ spec:
               secretKeyRef:
                 key: db_admin_pass
                 name: db-creds
-          - name: POSTGRES_USER
+          - name: psql_USER
             value: wtf
           - name: PGUSER
             valueFrom:
@@ -37,7 +37,7 @@ spec:
                 key: db_admin_user
                 name: db-creds
           - name: PGDATA
-            value: /var/lib/postgresql/data/pgdata
+            value: /var/lib/psqlql/data/pgdata
           - name: DB_PASS
             valueFrom:
               secretKeyRef:
@@ -83,8 +83,8 @@ spec:
           - name: db-bootstrap
             mountPath: /docker-entrypoint-initdb.d/
           {{- if .Values.pvc.enabled }}
-          - name: postgres-pvc
-            mountPath: /var/lib/postgresql/data
+          - name: psql-pvc
+            mountPath: /var/lib/psqlql/data
           {{- end }}
       volumes:
       - name: db-bootstrap
@@ -94,7 +94,7 @@ spec:
           - key: pg_user.sh
             path: init-user-db.sh
       {{- if .Values.pvc.enabled }}
-      - name: postgres-pvc
+      - name: psql-pvc
         persistentVolumeClaim:
-          claimName: postgres-pvc
+          claimName: psql-pvc
       {{- end -}}

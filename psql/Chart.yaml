@@ -1,6 +1,6 @@
 apiVersion: v2
-name: postgres
-description: A Helm chart for deploying Postgres to K8s
+name: psql
+description: A Helm chart for deploying PostgreSQL to K8s
 type: application
-version: 0.1.4
+version: 0.1.5
 appVersion: "15.4"
