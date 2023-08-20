@@ -9,6 +9,10 @@ spec:
         elements:
           - app: beantown
             branch: master
+          - app: menu-api
+            branch: main
+          - app: contact-api
+            branch: master
   template:
     metadata:
       name: '{{app}}'
