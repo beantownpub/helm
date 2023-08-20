@@ -19,7 +19,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - env:
-          - name: psql_PASSWORD
+          - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: db_admin_pass
@@ -29,7 +29,7 @@ spec:
               secretKeyRef:
                 key: db_admin_pass
                 name: db-creds
-          - name: psql_USER
+          - name: POSTGRES_USER
             value: wtf
           - name: PGUSER
             valueFrom:
