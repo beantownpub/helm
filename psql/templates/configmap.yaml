@@ -4,7 +4,9 @@ data:
     #!/bin/bash
     set -e
 
-    echo "User: ${DB_USER}"
+    # TODO: figure out where trailing newline is coming from
+    DB_USER=$(echo "${DB_USER}" | tr -d '\n')
+    DB_PASS=$(echo "${DB_PASS}" | tr -d '\n')
 
     psql -v -U ${POSTGRES_USER} -d ${POSTGRES_USER} <<-EOSQL
       CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASS}';
