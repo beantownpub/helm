@@ -26,8 +26,10 @@ spec:
           valueFiles:
             - values.yaml
           parameters:
-            - name: "global.env"
-              value: "prod"
+            - name: global.env
+              value: prod
+            - name: regionCode
+              value: use2
         repoURL: git@github.com:beantownpub/{{app}}.git
         targetRevision: '{{branch}}'
         path: helm/{{app}}
