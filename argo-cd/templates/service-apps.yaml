@@ -25,8 +25,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
     retry:
-    limit: 3
-    backoff:
-      duration: 15s
-      factor: 2
-      maxDuration: 3m0s
+      limit: 3
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 3m0s
