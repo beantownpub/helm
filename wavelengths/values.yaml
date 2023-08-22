@@ -1,8 +1,0 @@
-image:
-  name: wavelengths
-  repository: jalgraves/wavelengths
-  pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-containerPort: 3077

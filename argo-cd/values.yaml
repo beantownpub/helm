@@ -130,6 +130,18 @@ argo-cd:
           sshPrivateKeySecret:
             key: sshPrivateKey
             name: github-ssh
+        - name: thehubpub
+          type: git
+          url: git@github.com:beantownpub/thehubpub.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
+        - name: wavelengths
+          type: git
+          url: git@github.com:beantownpub/wavelengths.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
         - name: argo
           type: helm
           url: https://argoproj.github.io/argo-helm
