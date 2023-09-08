@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: contact-api
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/contact-api
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/contact-api/
+    repoURL: git@github.com:beantownpub/contact-api.git
+    targetRevision: main
+    helm:
+      releaseName: contact-api
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: regionCode
+          value: use2
+        - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+          value: arn:aws:iam::112138771825:role/ProductionUse2ContactAPI
+        - name: aws.region
+          value: us-east-2
+        - name: aws.secretName
+          value: production-use2-contact-api-creds
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

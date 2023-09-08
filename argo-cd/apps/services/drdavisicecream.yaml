@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: drdavisicecream
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/drdavisicecream
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/drdavisicecream/
+    repoURL: git@github.com:jalgraves/drdavisicecream.git
+    targetRevision: main
+    helm:
+      releaseName: drdavisicecream
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: regionCode
+          value: use2
+        - name: aws.region
+          value: us-east-2
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: beantown
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/beantown
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/beantown/
+    repoURL: git@github.com:beantownpub/beantown.git
+    targetRevision: main
+    helm:
+      releaseName: beantown
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: regionCode
+          value: use2
+        - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+          value: arn:aws:iam::112138771825:role/ProductionUse1Beantown
+        - name: aws.region
+          value: us-east-2
+        - name: aws.secretName
+          value: production-use2-beantown-creds
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: users-api
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/users-api
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/users-api/
+    repoURL: git@github.com:beantownpub/users-api.git
+    targetRevision: main
+    helm:
+      releaseName: users-api
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: regionCode
+          value: use2
+        - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+          value: arn:aws:iam::112138771825:role/ProductionUse2UsersAPI
+        - name: aws.region
+          value: us-east-2
+        - name: aws.secretName
+          value: production-use2-users-api-creds
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

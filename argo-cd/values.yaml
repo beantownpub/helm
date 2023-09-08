@@ -142,6 +142,12 @@ argo-cd:
           sshPrivateKeySecret:
             key: sshPrivateKey
             name: github-ssh
+        - name: drdavisicecream
+          type: git
+          url: git@github.com:jalgraves/drdavisicecream.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
         - name: argo
           type: helm
           url: https://argoproj.github.io/argo-helm

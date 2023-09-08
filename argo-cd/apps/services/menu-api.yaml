@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: menu-api
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/menu-api
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/menu-api/
+    repoURL: git@github.com:beantownpub/menu-api.git
+    targetRevision: main
+    helm:
+      releaseName: menu-api
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: regionCode
+          value: use2
+        - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+          value: arn:aws:iam::112138771825:role/ProductionUse2MenuAPI
+        - name: aws.region
+          value: us-east-2
+        - name: aws.secretName
+          value: production-use2-menu-api-creds
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wavelengths
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/wavelengths
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/wavelengths/
+    repoURL: git@github.com:beantownpub/wavelengths.git
+    targetRevision: main
+    helm:
+      releaseName: wavelengths
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: regionCode
+          value: use2
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
