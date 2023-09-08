@@ -32,10 +32,15 @@ ingress:
       hostnames:
         - "*.use2.production.aws.beantownpub.com"
   gatewayDomains:
+    - beantownpub.com
     - "*.beantownpub.com"
+    - thehubpub.com
     - "*.thehubpub.com"
+    - drdavisicecream.com
     - "*.drdavisicecream.com"
+    - wavelengths-brookline.com
     - "*.wavelengths-brookline.com"
+    - jalgraves.com
     - "*.jalgraves.com"
   serviceName: istio
 gateway:
