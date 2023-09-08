@@ -23,6 +23,8 @@ spec:
           value: use2
         - name: aws.region
           value: us-east-2
+        - name: istio.enabled
+          value: "true"
   project: default
   syncPolicy:
     automated:

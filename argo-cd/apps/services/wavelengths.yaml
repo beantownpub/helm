@@ -21,6 +21,8 @@ spec:
           value: prod
         - name: regionCode
           value: use2
+        - name: istio.enabled
+          value: "true"
   project: default
   syncPolicy:
     automated:

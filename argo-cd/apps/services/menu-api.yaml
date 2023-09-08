@@ -27,6 +27,8 @@ spec:
           value: us-east-2
         - name: aws.secretName
           value: production-use2-menu-api-creds
+        - name: istio.enabled
+          value: "true"
   project: default
   syncPolicy:
     automated:
