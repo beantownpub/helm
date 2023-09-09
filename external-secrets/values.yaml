@@ -1,4 +1,4 @@
 aws:
   region: ""
 env: ""
-iamRoleArn: ""
+roleArn: ""
