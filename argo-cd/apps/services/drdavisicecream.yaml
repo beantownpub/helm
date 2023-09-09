@@ -25,7 +25,7 @@ spec:
           value: us-east-2
         - name: istio.enabled
           value: "true"
-  project: default
+  project: services
   syncPolicy:
     automated:
       selfHeal: true

@@ -29,7 +29,7 @@ spec:
           value: production-use2-contact-api-creds
         - name: istio.enabled
           value: "true"
-  project: default
+  project: services
   syncPolicy:
     automated:
       selfHeal: true

@@ -29,9 +29,9 @@ spec:
           value: production-use2-beantown-creds
         - name: istio.enabled
           value: "true"
+        - name: externalSecrets.enabled
+          value: "true"
   project: default
   syncPolicy:
-    automated:
-      selfHeal: true
     syncOptions:
       - CreateNamespace=true

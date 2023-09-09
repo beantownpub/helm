@@ -28,7 +28,7 @@ podSecurityContext: {}
 securityContext: {}
 
 pvc:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP

@@ -29,9 +29,9 @@ spec:
           value: production-use2-thehubpub-creds
         - name: istio.enabled
           value: "true"
-  project: default
+        - name: externalSecrets.enabled
+          value: "true"
+  project: services
   syncPolicy:
-    automated:
-      selfHeal: true
     syncOptions:
       - CreateNamespace=true
