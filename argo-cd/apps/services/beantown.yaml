@@ -31,7 +31,7 @@ spec:
           value: "true"
         - name: externalSecrets.enabled
           value: "true"
-  project: default
+  project: services
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
