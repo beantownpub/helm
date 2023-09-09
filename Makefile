@@ -1,5 +1,5 @@
 # -include psql/Makefile
--include merch_api/Makefile contact_api/Makefile menu_api/Makefile
+-include merch_api/Makefile
 .PHONY: all test clean help
 export MAKE_PATH ?= $(shell pwd)
 export SELF ?= $(MAKE)
@@ -64,13 +64,6 @@ pod-identity-webhook/publish:
 		cd - && \
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add pod-identity-webhook/
-
-## Publish karpenter chart
-karpenter/publish:
-	cd karpenter/ && helm package . && \
-		cd - && \
-		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add karpenter/
 
 namespaces: context
 	@echo "\033[1;32m. . . Installing $(env) namespaces . . .\033[1;37m\n"
@@ -211,75 +204,10 @@ admin/delete: context
 admin/port_forward: context
 	kubectl port-forward --namespace $(namespace) svc/beantown-admin 3033:3033
 
-## Publish bentown Helm chart
-beantown/publish:
-	cd beantown && helm package . && \
-		cd - && \
-		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add beantown/
-
-## Publish thehubpub Helm chart
-thehubpub/publish:
-	cd thehubpub && helm package . && \
-		cd - && \
-		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add thehubpub/
-
 ## Create Beantown secret
 beantown/secret: context
 	@echo "\033[1;32m. . . Installing beantown $(env) secret . . .\033[1;37m\n"
 	cd beantown && make secret env=$(env)
-
-## Install Beantownpub frontend
-beantown/install: context
-	cd beantown && make install env=$(env) context=$(context)
-
-## Forward Beantownpub port locally k8s_port:local_port
-beantown/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/beantown 3000:3000
-
-## Install Thehubpub frontend
-thehubpub/install: context
-	cd thehubpub && make install env=$(env) context=$(context)
-
-## Forward The Hub Pub port locally k8s_port:local_port
-thehubpub/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/thehubpub 3037:3037
-
-## Install Wavelengths frontend
-wavelengths/install: context
-	cd wavelengths && make install env=$(env) context=$(context)
-
-## Forward The Hub Pub port locally k8s_port:local_port
-wavelengths/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/wavelengths 3077:3077
-
-## Publish wavelengths Helm chart
-wavelengths/publish:
-	cd wavelengths && helm package . && \
-		cd - && \
-		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add wavelengths/
-
-## Publish bentown Helm chart
-drdavisicecream/publish:
-	cd drdavisicecream && helm package . && \
-		cd - && \
-		helm repo index . --url https://beantownpub.github.io/helm/ && \
-		git add drdavisicecream/
-
-## Create drdavisicecream secret
-drdavisicecream/secret: context
-	@echo "\033[1;32mInstalling drdavisicecream $(env) secret . . .\033[1;37m\n"
-	cd drdavisicecream && make secret env=$(env)
-
-## Install drdavisicecream frontend
-drdavisicecream/install: context
-	cd drdavisicecream && make install env=$(env) context=$(context)
-
-## Forward drdavisicecream port locally k8s_port:local_port
-drdavisicecream/port_forward: context
-	kubectl port-forward --namespace $(namespace) svc/drdavisicecream 3034:3034
 
 ## Forward port for Cilium Hubble UI
 hubble/port_forward:

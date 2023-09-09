@@ -1,0 +1,11 @@
+apiVersion: v2
+name: external-sescrets
+description: Helm chart for external-secrets
+type: application
+appVersion: v0.9.4
+version: 0.1.0
+
+dependencies:
+  - name: external-secrets
+    version: 0.9.4
+    repository: https://charts.external-secrets.io
