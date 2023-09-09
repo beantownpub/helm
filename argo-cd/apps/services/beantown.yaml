@@ -19,6 +19,8 @@ spec:
       parameters:
         - name: global.env
           value: prod
+        - name: env
+          value: production
         - name: regionCode
           value: use2
         - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
