@@ -10,7 +10,7 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: helm/beanbot/
-    repoURL: git@github.com:beanbotpub/beanbot.git
+    repoURL: git@github.com:beantownpub/beanbot.git
     targetRevision: main
     helm:
       releaseName: beanbot
