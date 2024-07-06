@@ -94,6 +94,12 @@ argo-cd:
     config:
       accounts.admin: 'apiKey, login'
       repositories: |-
+        - name: beanbot
+          type: git
+          url: git@github.com:beantownpub/beanbot.git
+          sshPrivateKeySecret:
+            key: sshPrivateKey
+            name: github-ssh
         - name: beantown
           type: git
           url: git@github.com:beantownpub/beantown.git
