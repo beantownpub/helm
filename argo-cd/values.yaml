@@ -163,9 +163,6 @@ argo-cd:
         - name: argo
           type: helm
           url: https://argoproj.github.io/argo-helm
-        - name: bitnami
-          type: helm
-          url: https://charts.bitnami.com/bitnami
         - name: aws
           type: helm
           url: https://aws.github.io/eks-charts
@@ -178,9 +175,6 @@ argo-cd:
         - name: beantownpub-charts
           type: helm
           url: https://beantownpub.github.io/helm/
-        - name: karpenter
-          type: helm
-          url: oci://public.ecr.aws/karpenter/karpenter
         - name: cert-manager
           type: helm
           url: https://charts.jetstack.io

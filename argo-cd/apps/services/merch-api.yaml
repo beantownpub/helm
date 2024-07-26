@@ -1,37 +1,37 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: merch-api
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: /helm/merch-api
-spec:
-  destination:
-    namespace: production
-    server: https://kubernetes.default.svc
-  source:
-    path: helm/merch-api/
-    repoURL: git@github.com:beantownpub/merch-api.git
-    targetRevision: main
-    helm:
-      releaseName: merch-api
-      valueFiles:
-        - values.yaml
-      parameters:
-        - name: global.env
-          value: prod
-        - name: regionCode
-          value: use2
-        - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-          value: arn:aws:iam::112138771825:role/ProductionUse2MerchAPI
-        - name: aws.region
-          value: us-east-2
-        - name: aws.secretName
-          value: production-use2-merch-api-creds
-        - name: istio.enabled
-          value: "true"
-  project: services
-  syncPolicy:
-    automated:
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: merch-api
+#   annotations:
+#     argocd.argoproj.io/manifest-generate-paths: /helm/merch-api
+# spec:
+#   destination:
+#     namespace: production
+#     server: https://kubernetes.default.svc
+#   source:
+#     path: helm/merch-api/
+#     repoURL: git@github.com:beantownpub/merch-api.git
+#     targetRevision: main
+#     helm:
+#       releaseName: merch-api
+#       valueFiles:
+#         - values.yaml
+#       parameters:
+#         - name: global.env
+#           value: prod
+#         - name: regionCode
+#           value: use2
+#         - name: "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+#           value: arn:aws:iam::112138771825:role/ProductionUse2MerchAPI
+#         - name: aws.region
+#           value: us-east-2
+#         - name: aws.secretName
+#           value: production-use2-merch-api-creds
+#         - name: istio.enabled
+#           value: "true"
+#   project: services
+#   syncPolicy:
+#     automated:
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
