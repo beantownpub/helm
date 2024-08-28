@@ -32,7 +32,7 @@ serviceAccount:
 podAnnotations: {}
 podSecurityContext: {}
 securityContext: {}
-
+pgDataDir: /var/lib/psql/data/pgdata
 pvc:
   enabled: true
 

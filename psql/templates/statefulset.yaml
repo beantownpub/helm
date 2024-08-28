@@ -37,7 +37,7 @@ spec:
                 key: db_admin_user
                 name: db-creds
           - name: PGDATA
-            value: /var/lib/psqlql/data/pgdata
+            value: {{ .Values.pgDataDir }}
           - name: DB_PASS
             valueFrom:
               secretKeyRef:
