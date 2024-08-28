@@ -1,8 +1,0 @@
-apiVersion: v2
-name: contact-api
-description: Contact API deployment
-type: application
-version: 0.1.4
-appVersion: 0.1.12-fda6db4
-sources:
-- https://github.com/beantownpub/contact_api

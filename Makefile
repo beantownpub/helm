@@ -1,4 +1,4 @@
-# -include psql/Makefile
+-include psql/Makefile
 -include merch_api/Makefile
 .PHONY: all test clean help
 export MAKE_PATH ?= $(shell pwd)
@@ -89,11 +89,6 @@ admin/publish:
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add admin/
 
-## Create database secret
-db/secret: context
-	@echo "\033[1;32m. . . Installing DB $(env) secret . . .\033[1;37m\n"
-	cd psql && make db/secret env=$(env)
-
 ## Publish db Helm chart
 db/publish:
 	cd psql && helm package . && \
@@ -101,12 +96,7 @@ db/publish:
 		helm repo index . --url https://beantownpub.github.io/helm/ && \
 		git add psql/
 
-## Create Users API secret
-users/secret: context
-	@echo "\033[1;32m. . . Installing users-api $(env) secret . . .\033[1;37m\n"
-	cd users_api && make secret env=$(env)
-
-secrets: app/creds/secret app/services/secret users/secret app/square/secret beantown/secret
+secrets: app/creds/secret app/services/secret users/secret app/square/secret
 
 deploy: context namespaces secrets db/install
 
@@ -158,6 +148,7 @@ cert_manager/install:
 help:
 	@printf "Available targets:\n\n"
 	@$(SELF) -s help/generate | grep -E "\w($(HELP_FILTER))"
+	@printf "\n"
 
 help/generate:
 	@awk '/^[a-zA-Z\_0-9%:\\\/-]+:/ { \
@@ -171,26 +162,6 @@ help/generate:
 		} \
 	} \
 	{ lastLine = $$0 }' $(MAKE_FILES) | sort -u
-	@printf "\n\n"
-
-## Forward db port
-db/port_forward: context
-	kubectl port-forward --namespace database svc/psql 5432:5432
-
-## Template db Helm chart
-db/template: context
-	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"
-	cd psql && make template env=$(env) context=$(context)
-
-## Install database
-db/install: context
-	@echo "\033[1;32m. . . Installing DB in $(env) . . .\033[1;37m\n"
-	cd psql && make install env=$(env) context=$(context)
-
-## Install Users API
-users/install: context
-	@echo "\033[1;32m. . . Installing users-api in $(env) . . .\033[1;37m\n"
-	cd users_api && make install env=$(env) context=$(context)
 
 ## Install Admin frontend
 admin/install: context
@@ -203,11 +174,6 @@ admin/delete: context
 ## Forward Beantown admin port locally
 admin/port_forward: context
 	kubectl port-forward --namespace $(namespace) svc/beantown-admin 3033:3033
-
-## Create Beantown secret
-beantown/secret: context
-	@echo "\033[1;32m. . . Installing beantown $(env) secret . . .\033[1;37m\n"
-	cd beantown && make secret env=$(env)
 
 ## Forward port for Cilium Hubble UI
 hubble/port_forward:
