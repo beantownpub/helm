@@ -73,7 +73,7 @@ spec:
           - name: db-bootstrap
             mountPath: /docker-entrypoint-initdb.d/
           {{- if .Values.pvc.enabled }}
-          - name: psql-pvc
+          - name: {{ include "psql.fullname" . }}
             mountPath: /var/lib/psqlql/data
           {{- end }}
       volumes:
