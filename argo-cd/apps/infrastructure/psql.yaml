@@ -14,6 +14,17 @@ spec:
     targetRevision: main
     helm:
       releaseName: psql
+      parameters:
+        - name: contactDbName
+          value: contact_api
+        - name: contentDbName
+          value: content_api
+        - name: menuDbName
+          value: menu_api
+        - name: merchDbName
+          value: merch_api
+        - name: usersDbName
+          value: users_api
       valueFiles:
         - values.yaml
   project: default
