@@ -1,27 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: the-flagrant-fowl
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: /helm/the-flagrant-fowl
-spec:
-  destination:
-    namespace: production
-    server: https://kubernetes.default.svc
-  source:
-    path: helm/the-flagrant-fowl/
-    repoURL: git@github.com:jalgraves/the-flagrant-fowl.git
-    targetRevision: main
-    helm:
-      releaseName: the-flagrant-fowl
-      valueFiles:
-        - values.yaml
-      parameters:
-        - name: global.env
-          value: prod
-        - name: regionCode
-          value: use2
-        - name: istio.enabled
-          value: "true"
-  project: services
-  syncPolicy: {}
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: the-flagrant-fowl
+#   annotations:
+#     argocd.argoproj.io/manifest-generate-paths: /helm/the-flagrant-fowl
+# spec:
+#   destination:
+#     namespace: production
+#     server: https://kubernetes.default.svc
+#   source:
+#     path: helm/the-flagrant-fowl/
+#     repoURL: git@github.com:jalgraves/the-flagrant-fowl.git
+#     targetRevision: main
+#     helm:
+#       releaseName: the-flagrant-fowl
+#       valueFiles:
+#         - values.yaml
+#       parameters:
+#         - name: global.env
+#           value: prod
+#         - name: regionCode
+#           value: use2
+#         - name: istio.enabled
+#           value: "true"
+#   project: services
+#   syncPolicy: {}
