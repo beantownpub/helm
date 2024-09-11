@@ -34,7 +34,7 @@ podSecurityContext: {}
 securityContext: {}
 pgDataDir: /var/lib/psql/data/pgdata
 pvc:
-  enabled: true
+  enabled: false
 
 service:
   type: ClusterIP
