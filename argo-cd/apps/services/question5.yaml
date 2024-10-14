@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: question5
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /helm/question5
+spec:
+  destination:
+    namespace: production
+    server: https://kubernetes.default.svc
+  source:
+    path: helm/question5/
+    repoURL: git@github.com:jalgraves/question5.git
+    targetRevision: main
+    helm:
+      releaseName: question5
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: global.env
+          value: prod
+        - name: env
+          value: production
+        - name: istio.enabled
+          value: "true"
+  project: services
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

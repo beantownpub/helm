@@ -1,31 +1,31 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: beanbot
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: /helm/beanbot
-spec:
-  destination:
-    namespace: production
-    server: https://kubernetes.default.svc
-  source:
-    path: helm/beanbot/
-    repoURL: git@github.com:beantownpub/beanbot.git
-    targetRevision: main
-    helm:
-      releaseName: beanbot
-      valueFiles:
-        - values.yaml
-      parameters:
-        - name: global.env
-          value: prod
-        - name: env
-          value: production
-        - name: regionCode
-          value: use2
-        - name: istio.enabled
-          value: "true"
-  project: services
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: beanbot
+#   annotations:
+#     argocd.argoproj.io/manifest-generate-paths: /helm/beanbot
+# spec:
+#   destination:
+#     namespace: production
+#     server: https://kubernetes.default.svc
+#   source:
+#     path: helm/beanbot/
+#     repoURL: git@github.com:beantownpub/beanbot.git
+#     targetRevision: main
+#     helm:
+#       releaseName: beanbot
+#       valueFiles:
+#         - values.yaml
+#       parameters:
+#         - name: global.env
+#           value: prod
+#         - name: env
+#           value: production
+#         - name: regionCode
+#           value: use2
+#         - name: istio.enabled
+#           value: "true"
+#   project: services
+#   syncPolicy:
+#     syncOptions:
+#       - CreateNamespace=true
