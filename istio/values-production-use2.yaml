@@ -8,6 +8,8 @@ certArns:
   - arn:aws:acm:us-east-2:112138771825:certificate/768b1eba-32c1-42ff-91e4-cc6e864091d8
   - arn:aws:acm:us-east-2:112138771825:certificate/0ce52cbf-0f61-4e97-92ac-fa0460b67081
   - arn:aws:acm:us-east-2:112138771825:certificate/ce7bbbcd-5bbc-4d17-8e83-d5224e143f0f
+  # oneflawedwage.com
+  - arn:aws:acm:us-east-2:112138771825:certificate/91a8c315-6dfe-446c-b11d-8bc1955d54eb
 cilium:
   hubble:
     enabled: true
@@ -42,6 +44,8 @@ ingress:
     - "*.wavelengths-brookline.com"
     - jalgraves.com
     - "*.jalgraves.com"
+    - oneflawedwage.com
+    - "*.oneflawedwage.com"
   serviceName: istio
 gateway:
   replicaCount: 1
