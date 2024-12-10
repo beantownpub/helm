@@ -1,15 +1,18 @@
 albCertificateArn:
 argoCd:
   enabled: false
-certArns: []
+certArns:
+  - arn:aws:acm:us-east-1:826438047975:certificate/387a92d7-1e44-4f04-8ebd-ef7eb3fbf7be
+
 cilium:
   hubble:
     enabled: true
+    hostname: "hubble.development.use1.jalgraves.com"
 
-environment:
-org:
-regionCode:
-sslPolicy:
+environment: development
+org: jalgraves
+regionCode: use1
+sslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
 
 ingress:
   albPrivate:
@@ -23,14 +26,16 @@ ingress:
     accessLogs:
       enabled: false
     externalDns:
-      hostnames: []
-    addressType: ipv4
-    targetType: instance
-  gatewayDomains: []
+      hostnames:
+        - "*.development.use1.jalgraves.com"
+  gatewayDomains:
+    - development.use1.jalgraves.com
+    - "*.development.use1.jalgraves.com"
   serviceName: istio
 gateway:
-  nodeSelector:
-    role: istio
+  replicaCount: 1
+  # nodeSelector:
+  #   control-plane-node: init
   service:
     type: NodePort
     annotations: {}
@@ -46,7 +51,7 @@ istiod:
       excludeOutboundPorts: "8125,8126,8200"
   pilot:
     # nodeSelector:
-    #   role: istio
+    #   control-plane-node: init
     env:
       # If enabled, Pilot will send only clusters that referenced in gateway virtual services attached to gateway
       # https://istio.io/latest/docs/reference/commands/pilot-agent/

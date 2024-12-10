@@ -1,0 +1,81 @@
+albCertificateArn:
+argoCd:
+  enabled: false
+certArns:
+  - arn:aws:acm:us-east-2:112138771825:certificate/43391e28-c1f0-433e-b7f6-2f5b396d57ff
+  - arn:aws:acm:us-east-2:112138771825:certificate/2993acd8-dd01-495b-b63f-41a963e341b2
+  - arn:aws:acm:us-east-2:112138771825:certificate/1f40cdb6-13b9-4d7d-a949-75ff72886768
+  - arn:aws:acm:us-east-2:112138771825:certificate/768b1eba-32c1-42ff-91e4-cc6e864091d8
+  - arn:aws:acm:us-east-2:112138771825:certificate/0ce52cbf-0f61-4e97-92ac-fa0460b67081
+  - arn:aws:acm:us-east-2:112138771825:certificate/ce7bbbcd-5bbc-4d17-8e83-d5224e143f0f
+  # oneflawedwage.com
+  - arn:aws:acm:us-east-2:112138771825:certificate/91a8c315-6dfe-446c-b11d-8bc1955d54eb
+cilium:
+  hubble:
+    enabled: true
+    hostname: "hubble.production.use1.aws.beantownpub.com"
+
+environment: production
+org: beantownpub
+regionCode: use1
+sslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+
+ingress:
+  albPrivate:
+    enabled: false
+    accessLogs:
+      enabled: false
+    externalDns:
+      hostnames: []
+  albPublic:
+    enabled: true
+    accessLogs:
+      enabled: false
+    externalDns:
+      hostnames:
+        - "*.use1.production.aws.beantownpub.com"
+  gatewayDomains:
+    - beantownpub.com
+    - "*.beantownpub.com"
+    - thehubpub.com
+    - "*.thehubpub.com"
+    - drdavisicecream.com
+    - "*.drdavisicecream.com"
+    - wavelengths-brookline.com
+    - "*.wavelengths-brookline.com"
+    - jalgraves.com
+    - "*.jalgraves.com"
+    - oneflawedwage.com
+    - "*.oneflawedwage.com"
+  serviceName: istio
+gateway:
+  replicaCount: 1
+  nodeSelector:
+    role: worker
+  service:
+    type: NodePort
+    annotations: {}
+
+  tolerations: []
+
+istiod:
+  global:
+    defaultPodDisruptionBudget:
+      enabled: false
+    logAsJson: true
+    proxy:
+      excludeOutboundPorts: "8125,8126,8200"
+  pilot:
+    nodeSelector:
+      role: worker
+    env:
+      # If enabled, Pilot will send only clusters that referenced in gateway virtual services attached to gateway
+      # https://istio.io/latest/docs/reference/commands/pilot-agent/
+      PILOT_FILTER_GATEWAY_CLUSTER_CONFIG: true
+    resources:
+      requests:
+        memory: 1Gi
+    tolerations: []
+
+proxyV2:
+  enabled: true

@@ -5,7 +5,7 @@ metadata:
   name: hubble
 spec:
   hosts:
-  - "hubble.{{ .Values.regionCode }}.{{ .Values.environment }}.aws.{{ .Values.org }}.com"
+  - "{{ .Values.cilium.hubble.hostname }}"
 
   gateways:
   - {{ .Release.Namespace }}/web-gateway

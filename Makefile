@@ -195,3 +195,18 @@ foo_bar/install:
 	@echo "buzz $(buzz)"
 	@echo $(tag)
 	@echo $(subst _,-,$(@D))
+
+istio/template:
+	helm template istio istio/ \
+		-f istio/$(istio_values) \
+		--namespace istio-system \
+		--create-namespace \
+		--debug
+
+istio/install:
+	helm upgrade --install istio istio/ \
+		--namespace istio-system \
+		--kubeconfig=$(kubeconfig) \
+		-f istio/$(istio_values) \
+		--create-namespace \
+		--debug
