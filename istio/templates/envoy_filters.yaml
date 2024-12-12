@@ -1,65 +1,65 @@
-# Filter for stripping the envoy server header
-apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: headerstrip-server-name
-  namespace: istio-system
-spec:
-  configPatches:
-  - applyTo: NETWORK_FILTER
-    match:
-      listener:
-        filterChain:
-          filter:
-            name: "envoy.filters.network.http_connection_manager"
-    patch:
-      operation: MERGE
-      value:
-        typed_config:
-          "@type": "type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager"
-          server_header_transformation: PASS_THROUGH
----
-{{- if .Values.proxyV2.enabled -}}
-# This is required for the AWS NLB to work properly
-apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: proxy-protocol
-  namespace: istio-system
-spec:
-  workloadSelector:
-    labels:
-      istio: ingress
-  configPatches:
-  - applyTo: LISTENER
-    patch:
-      operation: MERGE
-      value:
-        listener_filters:
-        - name: envoy.filters.listener.proxy_protocol
-        - name: envoy.filters.listener.tls_inspector
----
-# enable X-forwarded-for header
-apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: ingressgateway-settings
-  namespace: istio-system
-spec:
-  configPatches:
-  - applyTo: NETWORK_FILTER
-    match:
-      listener:
-        filterChain:
-          filter:
-            name: envoy.http_connection_manager
-    patch:
-      operation: MERGE
-      value:
-        name: envoy.http_connection_manager
-        typed_config:
-          "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
-          skip_xff_append: false
-          use_remote_address: true
-          xff_num_trusted_hops: 1
-{{- end -}}
+# # Filter for stripping the envoy server header
+# apiVersion: networking.istio.io/v1alpha3
+# kind: EnvoyFilter
+# metadata:
+#   name: headerstrip-server-name
+#   namespace: istio-system
+# spec:
+#   configPatches:
+#   - applyTo: NETWORK_FILTER
+#     match:
+#       listener:
+#         filterChain:
+#           filter:
+#             name: "envoy.filters.network.http_connection_manager"
+#     patch:
+#       operation: MERGE
+#       value:
+#         typed_config:
+#           "@type": "type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager"
+#           server_header_transformation: PASS_THROUGH
+# ---
+# {{- if .Values.proxyV2.enabled -}}
+# # This is required for the AWS NLB to work properly
+# apiVersion: networking.istio.io/v1alpha3
+# kind: EnvoyFilter
+# metadata:
+#   name: proxy-protocol
+#   namespace: istio-system
+# spec:
+#   workloadSelector:
+#     labels:
+#       istio: ingress
+#   configPatches:
+#   - applyTo: LISTENER
+#     patch:
+#       operation: MERGE
+#       value:
+#         listener_filters:
+#         - name: envoy.filters.listener.proxy_protocol
+#         - name: envoy.filters.listener.tls_inspector
+# ---
+# # enable X-forwarded-for header
+# apiVersion: networking.istio.io/v1alpha3
+# kind: EnvoyFilter
+# metadata:
+#   name: ingressgateway-settings
+#   namespace: istio-system
+# spec:
+#   configPatches:
+#   - applyTo: NETWORK_FILTER
+#     match:
+#       listener:
+#         filterChain:
+#           filter:
+#             name: envoy.http_connection_manager
+#     patch:
+#       operation: MERGE
+#       value:
+#         name: envoy.http_connection_manager
+#         typed_config:
+#           "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
+#           skip_xff_append: false
+#           use_remote_address: true
+#           xff_num_trusted_hops: 1
+# {{- end -}}

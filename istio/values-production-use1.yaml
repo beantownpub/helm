@@ -2,17 +2,19 @@ albCertificateArn:
 argoCd:
   enabled: false
 certArns:
-  - arn:aws:acm:us-east-2:112138771825:certificate/43391e28-c1f0-433e-b7f6-2f5b396d57ff
-  - arn:aws:acm:us-east-2:112138771825:certificate/2993acd8-dd01-495b-b63f-41a963e341b2
-  - arn:aws:acm:us-east-2:112138771825:certificate/1f40cdb6-13b9-4d7d-a949-75ff72886768
-  - arn:aws:acm:us-east-2:112138771825:certificate/768b1eba-32c1-42ff-91e4-cc6e864091d8
-  - arn:aws:acm:us-east-2:112138771825:certificate/0ce52cbf-0f61-4e97-92ac-fa0460b67081
-  - arn:aws:acm:us-east-2:112138771825:certificate/ce7bbbcd-5bbc-4d17-8e83-d5224e143f0f
-  # oneflawedwage.com
-  - arn:aws:acm:us-east-2:112138771825:certificate/91a8c315-6dfe-446c-b11d-8bc1955d54eb
+  # "beantownpub-use1"
+  - "arn:aws:acm:us-east-1:112138771825:certificate/6f4f262d-9056-4fd0-8bf2-3a0bd9cad42c"
+  # "drdavisicecream-use1"
+  - "arn:aws:acm:us-east-1:112138771825:certificate/a873ee25-0dce-48bb-b60e-0a19c8953f04"
+  # "production-use1"
+  - "arn:aws:acm:us-east-1:112138771825:certificate/adb4dc1c-f96e-4a3c-b72d-838f7a9aa1f5"
+  # "thehubpub-use1"
+  - "arn:aws:acm:us-east-1:112138771825:certificate/50b358d1-c996-460f-9025-855a9e95969e"
+  # "wavelengths-brookline-use1"
+  - "arn:aws:acm:us-east-1:112138771825:certificate/72cf4544-fb1c-443c-b865-9846ea0e9405"
 cilium:
   hubble:
-    enabled: true
+    enabled: false
     hostname: "hubble.production.use1.aws.beantownpub.com"
 
 environment: production
@@ -33,7 +35,7 @@ ingress:
       enabled: false
     externalDns:
       hostnames:
-        - "*.use1.production.aws.beantownpub.com"
+        - "*.production.use1.aws.beantownpub.com"
   gatewayDomains:
     - beantownpub.com
     - "*.beantownpub.com"
@@ -51,7 +53,7 @@ ingress:
 gateway:
   replicaCount: 1
   nodeSelector:
-    role: worker
+    role: istio
   service:
     type: NodePort
     annotations: {}
@@ -65,15 +67,19 @@ istiod:
     logAsJson: true
     proxy:
       excludeOutboundPorts: "8125,8126,8200"
+      resources:
+        requests:
+          cpu: 25m
   pilot:
     nodeSelector:
-      role: worker
+      role: istio
     env:
       # If enabled, Pilot will send only clusters that referenced in gateway virtual services attached to gateway
       # https://istio.io/latest/docs/reference/commands/pilot-agent/
       PILOT_FILTER_GATEWAY_CLUSTER_CONFIG: true
     resources:
       requests:
+        cpu: 100m
         memory: 1Gi
     tolerations: []
 

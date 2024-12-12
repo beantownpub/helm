@@ -15,9 +15,11 @@ ifdef env
 		context = ${DEV_CONTEXT}
 		namespace = ${DEV_NAMESPACE}
 		domain ?= jalgraves.com
+		istio_values = ${DEV_ISTIO_VALUES}
 	else ifeq ($(env),prod)
 		context = ${PROD_CONTEXT}
 		namespace = ${PROD_NAMESPACE}
+		istio_values = ${PROD_ISTIO_VALUES}
 	else
 		env := dev
 	endif
@@ -203,10 +205,25 @@ istio/template:
 		--create-namespace \
 		--debug
 
+## Install Istio
 istio/install:
 	helm upgrade --install istio istio/ \
 		--namespace istio-system \
-		--kubeconfig=$(kubeconfig) \
+		--kubeconfig="${HOME}"/.kube/$(kubeconfig) \
 		-f istio/$(istio_values) \
+		--create-namespace \
+		--debug
+
+
+external-secrets/template:
+	helm template external-secrets external-secrets/ \
+		--namespace external-secrets \
+		--create-namespace \
+		--debug
+
+external-secrets/install:
+	helm upgrade --install external-secrets external-secrets/ \
+		--namespace external-secrets \
+		--kubeconfig="${HOME}"/.kube/$(kubeconfig) \
 		--create-namespace \
 		--debug

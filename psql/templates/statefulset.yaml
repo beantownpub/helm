@@ -19,45 +19,55 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - env:
+          - name: PGDATA
+            value: {{ .Values.pgDataDir }}
+          - name: POSTGRES_USER
+            value: wtf
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: db_admin_pass
-                name: db-creds
+                key: ADMIN_PASSWORD
+                name: {{ include "psql.fullname" . }}
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
-                key: db_admin_pass
-                name: db-creds
-          - name: POSTGRES_USER
-            value: wtf
+                key: ADMIN_PASSWORD
+                name: {{ include "psql.fullname" . }}
           - name: PGUSER
             valueFrom:
               secretKeyRef:
-                key: db_admin_user
-                name: db-creds
-          - name: PGDATA
-            value: {{ .Values.pgDataDir }}
+                key: ADMIN_USERNAME
+                name: {{ include "psql.fullname" . }}
           - name: DB_PASS
             valueFrom:
               secretKeyRef:
-                key: db_pass
-                name: db-creds
+                key: DATABASE_PASSWORD
+                name: {{ include "psql.fullname" . }}
           - name: DB_USER
             valueFrom:
               secretKeyRef:
-                key: db_user
-                name: db-creds
+                key: DATABASE_USERNAME
+                name: {{ include "psql.fullname" . }}
           - name: CONTACT_DB_NAME
-            value: {{ .Values.contactDbName }}
-          - name: CONTACT_DB_NAME
-            value: {{ .Values.contentDbName }}
+            valueFrom:
+              secretKeyRef:
+                key: CONTACT_API_DB_NAME
+                name: {{ include "psql.fullname" . }}
           - name: MENU_DB_NAME
-            value: {{ .Values.menuDbName }}
+            valueFrom:
+              secretKeyRef:
+                key: MENU_API_DB_NAME
+                name: {{ include "psql.fullname" . }}
           - name: MERCH_DB_NAME
-            value: {{ .Values.merchDbName }}
+            valueFrom:
+              secretKeyRef:
+                key: MERCH_API_DB_NAME
+                name: {{ include "psql.fullname" . }}
           - name: USERS_DB_NAME
-            value: {{ .Values.usersDbName }}
+            valueFrom:
+              secretKeyRef:
+                key: USERS_API_DB_NAME
+                name: {{ include "psql.fullname" . }}
           name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

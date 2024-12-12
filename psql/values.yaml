@@ -10,6 +10,12 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+externalSecrets:
+  enabled: true
+
+environment:
+regionCode:
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

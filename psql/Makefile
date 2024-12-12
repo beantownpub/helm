@@ -4,31 +4,24 @@ port ?= ${DB_PORT}
 namespace ?= ${DB_NAMESPACE}
 tag ?= latest
 pvc_enabled ?= false
+region_code ?= use1
 
 
 ## Install psql database in cluster
 db/install:
-	kubectl config use-context $(context) && \
-	cd psql/ && \
-	helm upgrade --install $(name) . \
-		--namespace $(namespace) \
-		--set image.tag=$(tag) \
-		--set db_admin_pass=${DB_ADMIN_PASS} \
-		--set db_admin_user=${DB_ADMIN_USER} \
-		--set db_pass=${DB_PASS} \
-		--set db_user=${DB_USER} \
-		--set contactDbName=${CONTACT_DB_NAME} \
-		--set contentDbName=${CONTENT_DB_NAME} \
-		--set menuDbName=${MENU_DB_NAME} \
-		--set merchDbName=${MERCH_DB_NAME} \
-		--set usersDbName=${USERS_DB_NAME} \
+	helm upgrade --install psql . \
+		--kubeconfig="${HOME}"/.kube/$(kubeconfig) \
+		--namespace ${DB_NAMESPACE} \
 		--set pvc.enabled=$(pvc_enabled) \
+		--set environment=$(environment) \
+		--set regionCode=$(region_code) \
 		--debug
 
-db/template:
-  cd psql/ && \
-	helm template $(name) . \
-		--namespace $(namespace) \
+## Run helm template on psql chart
+db/wtf:
+	cd psql/ && \
+	helm template . \
+		--namespace ${DB_NAMESPACE} \
 		--name-template=$(name) \
 		--set image.tag=$(tag) \
 		--set contact_db_name=${CONTACT_DB_NAME} \
